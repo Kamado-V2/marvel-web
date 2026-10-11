@@ -62,11 +62,23 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* ============ Header ============ */
 .top{position:sticky;top:0;z-index:20;background:var(--sun);border-bottom:var(--border)}
 .top-in{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.brand{font-family:var(--f-display);font-size:1.7rem;letter-spacing:.04em;line-height:1.1;background:var(--ink);color:var(--sun);padding:3px 12px 5px;transform:rotate(-1.5deg);text-decoration:none;white-space:nowrap}
+.brand{position:relative;display:inline-flex;align-items:center;justify-content:center;width:clamp(180px,26vw,420px);min-width:180px;padding:0;border:4px solid var(--ink);background:#e11b20;box-shadow:5px 5px 0 rgba(20,16,42,.82);transform:rotate(-1.5deg);text-decoration:none;overflow:hidden;isolation:isolate;transition:transform .18s ease,box-shadow .18s ease}
+.brand:hover{transform:translate(-1px,-1px) rotate(-1.5deg);box-shadow:3px 3px 0 rgba(20,16,42,.82)}
+.brand img{display:block;width:100%;height:auto;filter:drop-shadow(0 3px 0 rgba(20,16,42,.22)) contrast(1.08) saturate(1.08)}
+.brand::before,.brand::after{content:"";position:absolute;inset:0;pointer-events:none}
+.brand::before{background:linear-gradient(90deg,transparent 0 14%,rgba(255,255,255,.38) 16%,transparent 18% 80%,rgba(255,255,255,.18) 82%,transparent 100%);mix-blend-mode:screen;transform:translateX(-20%);animation:brandSweep 2.8s linear infinite}
+.brand::after{background:linear-gradient(180deg,rgba(255,255,255,.18),transparent 25%,rgba(255,255,255,.18) 60%,transparent 100%);mix-blend-mode:screen;animation:brandFlicker 1.8s steps(2,end) infinite}
+@keyframes brandSweep{0%{transform:translateX(-32%)}100%{transform:translateX(38%)}}
+@keyframes brandFlicker{0%,100%{opacity:0;transform:translate3d(0,0,0)}8%{opacity:.38;transform:translate3d(-2px,1px,0)}12%{opacity:0;transform:translate3d(2px,-2px,0)}19%{opacity:.28;transform:translate3d(2px,0,0)}28%{opacity:0;transform:translate3d(-2px,0,0)}46%{opacity:.18;transform:translate3d(0,0,0)}54%{opacity:0}76%{opacity:.32;transform:translate3d(1px,-1px,0)}79%{opacity:0}}
 .brand:focus-visible{outline-color:var(--ink);outline-offset:4px}
 .nav{display:flex;gap:10px;align-items:center}
-.nav a{font-family:var(--f-display);font-size:1.3rem;letter-spacing:.04em;line-height:1.2;text-decoration:none;color:var(--ink);background:#fff;border:3px solid var(--ink);padding:2px 14px 4px;box-shadow:3px 3px 0 var(--ink)}
+.nav a{font-family:var(--f-display);font-size:1.3rem;letter-spacing:.04em;line-height:1.2;text-decoration:none;color:var(--ink);background:#fff;border:3px solid var(--ink);padding:2px 14px 4px;box-shadow:3px 3px 0 var(--ink);transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,color .16s ease}
 .nav a:hover{background:var(--pink)}
+.nav a.nav-war-poll,.nav a.nav-fan-sign-in{animation:navReady .55s cubic-bezier(.2,1.5,.4,1) both}
+.nav a.nav-fan-sign-in{animation-delay:.12s}
+.nav a.nav-war-poll:hover,.nav a.nav-war-poll:focus-visible{background:var(--blue);color:#fff;transform:translateY(-3px) rotate(-2deg);box-shadow:5px 6px 0 var(--ink)}
+.nav a.nav-fan-sign-in:hover,.nav a.nav-fan-sign-in:focus-visible{background:var(--red);color:#fff;transform:translateY(-3px) rotate(2deg);box-shadow:5px 6px 0 var(--ink)}
+@keyframes navReady{from{opacity:0;transform:translateY(-10px) scale(.9)}to{opacity:1;transform:none}}
 .music-toggle{font-family:var(--f-display);font-size:1.5rem;letter-spacing:.04em;line-height:1;background:var(--ink);color:#fff;border:3px solid var(--ink);width:42px;height:42px;padding:0;box-shadow:3px 3px 0 rgba(20,16,42,.75);transition:transform .08s,box-shadow .08s}
 .music-toggle:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 rgba(20,16,42,.75)}
 .music-toggle[aria-pressed="true"]{background:var(--sun);color:var(--ink);animation:musicPulse .9s ease-in-out infinite alternate}
@@ -82,8 +94,29 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 /* The comic page (right side of the hero) */
 .page{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px;background:#fff;padding:14px;border:var(--border);box-shadow:10px 10px 0 var(--ink);transform:rotate(1.5deg);overflow:hidden}
-.page-art{grid-column:1/-1;width:100%;height:100%;min-height:384px;object-fit:cover;border:var(--border);background:var(--ink);animation:slam .55s cubic-bezier(.2,1.5,.4,1) both}
-.page.is-animating .page-art{animation:comicFlash .45s ease}
+.page-frame{position:relative;grid-column:1/-1;width:100%;aspect-ratio:2/3;overflow:hidden;border:var(--border);background:var(--ink);container-type:inline-size}
+.page-art{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .38s ease}
+.page-art.is-visible{opacity:1}
+.ability-effects{position:absolute;inset:0;z-index:4;overflow:hidden;pointer-events:none}
+.ability-effect{position:absolute;left:var(--effect-x,50%);top:var(--effect-y,50%);width:82px;height:120px;opacity:0;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg));transform-origin:center;filter:drop-shadow(0 0 8px rgba(255,255,255,.9))}
+.ability-effect svg{display:block;width:100%;height:100%;overflow:visible}
+.ability-effect.is-active{animation:effectFlash .72s ease-out both}
+.ability-effect-lightning{width:72px;height:148px}
+.ability-effect-repulse{width:90px;height:90px}
+.ability-effect-web{width:130px;height:100px}
+.ability-effect-lightning.is-active svg{animation:lightningPulse .22s steps(2,end) 2}
+.ability-effect-repulse.is-active svg{transform-origin:center;animation:repulseCore .3s ease-in-out 2}
+.ability-effect-web.is-active path{stroke-dasharray:1;animation:webDraw .6s ease-out both}
+@keyframes effectFlash{
+  0%{opacity:0;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg)) scale(.42)}
+  14%{opacity:1;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg)) scale(1.08)}
+  28%{opacity:.92;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg)) scale(.96)}
+  58%{opacity:.9;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg)) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg)) scale(.86)}
+}
+@keyframes lightningPulse{0%,100%{filter:drop-shadow(0 0 4px #fff)}50%{filter:drop-shadow(0 0 14px #80eaff)}}
+@keyframes repulseCore{0%,100%{transform:scale(.78)}50%{transform:scale(1.12)}}
+@keyframes webDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 .page-nav{position:absolute;z-index:8;top:12px;right:12px;display:flex;gap:8px}
 .page-arrow{width:36px;height:36px;border:3px solid var(--ink);background:var(--sun);box-shadow:3px 3px 0 var(--ink);font-family:var(--f-display);font-size:1.5rem;line-height:1;padding:0;display:grid;place-items:center;transition:transform .12s,box-shadow .12s}
 .page-arrow:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 var(--ink)}
@@ -247,6 +280,53 @@ dialog::backdrop{background:rgba(20,16,42,.74);background-image:radial-gradient(
 .missed li{border:3px solid var(--ink);background:var(--sky);padding:10px 14px;font-size:.95rem}
 .missed li b{display:block;margin-top:2px}
 
+/* Community polls */
+.community{background:var(--pink);background-image:radial-gradient(rgba(255,255,255,.28) 20%,transparent 22%);background-size:16px 16px;padding:68px 20px 84px;border-bottom:var(--border)}
+.fan-sign-in{background:var(--sun);padding:48px 20px;border-bottom:var(--border);scroll-margin-top:92px}
+.fan-sign-in .community-card{max-width:760px;margin:0 auto}
+.fan-sign-in .community-card.is-in-view,.poll-card.is-in-view{animation:communityCardEnter .5s cubic-bezier(.2,1.2,.4,1) both}
+.community,.fan-sign-in{scroll-margin-top:92px}
+@keyframes communityCardEnter{from{opacity:0;transform:translateY(18px) rotate(-1deg) scale(.98)}to{opacity:1;transform:none}}
+.community .lede{max-width:54rem}
+.community-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;margin-top:32px;align-items:start}
+.community-main{display:grid;grid-template-columns:minmax(260px,.72fr) minmax(0,1.28fr);gap:24px;align-items:start}
+.community-main.is-signed-out{grid-template-columns:1fr}
+.community-card{background:#fff;border:var(--border);box-shadow:8px 8px 0 var(--ink);padding:22px}
+.community-card h3{font-size:1.8rem;margin-bottom:14px}
+.community-form{display:grid;gap:14px}
+.community-form label{display:grid;gap:6px;font-weight:700}
+.community-form input,.community-form textarea{width:100%;font:inherit;border:3px solid var(--ink);padding:10px 12px;background:#fff;color:var(--ink)}
+.community-form input:focus-visible,.community-form textarea:focus-visible{outline-offset:2px}
+.community-form input:focus-visible,.community-form textarea:focus-visible{animation:inputFocus .25s ease both}
+@keyframes inputFocus{50%{box-shadow:0 0 0 5px rgba(31,91,255,.2)}}
+.community-form textarea{min-height:92px;resize:vertical}
+.community-help,.community-status{font-size:.9rem}
+.community-status{min-height:1.5em;font-weight:700}
+.community-account{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.poll-option-fields{display:grid;gap:10px}
+.poll-fieldset{border:0;padding:0;margin:0}
+.poll-fieldset legend{font-weight:700;margin-bottom:6px}
+.poll-option-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;animation:pollOptionEnter .3s ease both}
+@keyframes pollOptionEnter{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.poll-remove{width:44px;height:44px;background:#fff;border:3px solid var(--ink);font-size:1.25rem}
+.poll-media-note{font-size:.82rem;color:var(--soft-ink)}
+.poll-list{display:grid;gap:18px}
+.poll-list h3{font-size:2rem}
+.poll-card{background:#fff;border:var(--border);box-shadow:5px 5px 0 var(--ink);padding:18px}
+.poll-card h4{font-family:var(--f-body);font-size:1.2rem;line-height:1.35;letter-spacing:0;margin-bottom:12px}
+.poll-author{margin:-5px 0 10px;font-size:.85rem;font-weight:700;color:var(--soft-ink)}
+.poll-media{display:block;width:100%;max-height:420px;object-fit:contain;background:var(--ink);margin:0 0 14px}
+.poll-choice-list{display:grid;gap:9px}
+.poll-choice{position:relative;isolation:isolate;overflow:hidden;width:100%;min-height:48px;text-align:left;background:#fff;border:3px solid var(--ink);padding:9px 12px;font:inherit;font-weight:700}
+.poll-choice::before{content:"";position:absolute;z-index:-1;inset:0 auto 0 0;width:var(--poll-percent,0%);background:var(--sky)}
+.poll-choice:hover:not(:disabled){background-color:var(--sun);transform:translateY(-2px);box-shadow:3px 4px 0 var(--ink)}
+.poll-choice:active:not(:disabled){transform:translate(2px,2px);box-shadow:none}
+.poll-choice:disabled{cursor:default}
+.poll-choice.is-selected{outline:3px solid var(--blue);outline-offset:1px}
+.poll-choice-label{display:flex;justify-content:space-between;gap:12px}
+.poll-meta{margin-top:12px;font-size:.82rem;color:var(--soft-ink)}
+.poll-empty{background:#fff;border:3px dashed var(--ink);padding:18px}
+
 /* Footer */
 footer{background:var(--ink);color:#fff;padding:36px 20px 44px}
 footer .wrap{display:grid;gap:10px;font-size:.9rem;max-width:760px;margin:0 auto;text-align:center}
@@ -259,6 +339,10 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
   .page{max-width:520px}
   .tools{grid-template-columns:1fr 1fr}
   .progress{grid-column:1/-1}
+  .top-in{gap:10px;padding-left:16px;padding-right:16px}
+  .brand{width:clamp(150px,22vw,260px);min-width:150px}
+  .nav{gap:6px}
+  .nav a{font-size:1.1rem;padding-left:9px;padding-right:9px;white-space:nowrap}
 }
 @media (max-width:640px){
   .opts{grid-template-columns:1fr}
@@ -267,11 +351,12 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
   .pop{right:-10px;top:-50px;width:112px;height:112px}
   .pop .bt{font-size:1.8rem}
   .tools{grid-template-columns:1fr}
+  .community-main{grid-template-columns:1fr}
   .movies,.quiz{padding-left:16px;padding-right:16px}
 }
 @media (max-width:520px){
   .top-in{padding:8px 12px;gap:8px;flex-wrap:wrap}
-  .brand{font-size:1.1rem;padding:2px 8px 4px}
+  .brand{width:clamp(140px,38vw,220px);min-width:140px}
   .nav{gap:6px}
   .nav a{font-size:1rem;padding:2px 8px 3px;box-shadow:2px 2px 0 var(--ink)}
   .burst{width:200px;height:200px}
@@ -283,6 +368,8 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .panel{opacity:1}
+  .ability-effects{display:none}
+  .nav a.nav-war-poll,.nav a.nav-fan-sign-in,.fan-sign-in .community-card,.poll-card{animation:none}
 }
 </style>
 </head>
@@ -291,10 +378,12 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
 
 <header class="top">
   <div class="top-in">
-    <a class="brand" href="#top">Marvel Movie Vault</a>
+    <a class="brand" href="#top" aria-label="Marvel Movie Vault home"><img src="assets/marvel-logo.png" alt="Marvel logo"></a>
     <nav class="nav" aria-label="Main">
       <a href="#movies">Movies</a>
       <a href="#quiz">Quiz</a>
+      <a class="nav-war-poll" href="#war-polls">War Poll</a>
+      <a class="nav-fan-sign-in" href="#fan-sign-in">Sign in</a>
       <button type="button" class="music-toggle" id="musicToggle" aria-label="Play music" aria-pressed="false" title="Play a 25-second music clip">♫</button>
       <span class="sr" id="musicStatus" aria-live="polite"></span>
     </nav>
@@ -319,7 +408,36 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
           <button type="button" class="page-arrow is-reverse" data-page="prev" aria-label="Previous comic page">←</button>
           <button type="button" class="page-arrow" data-page="next" aria-label="Next comic page">→</button>
         </div>
-        <img class="page-art" id="pageArt" src="assets/comic-page-spider-man.jpg" alt="Spider-Man comic panels">
+        <div class="page-frame">
+          <img class="page-art is-visible" id="pageArt" src="assets/comic-page-spider-man.jpg" alt="Spider-Man comic panels">
+          <img class="page-art" id="pageArtNext" alt="" aria-hidden="true">
+          <div class="ability-effects" id="abilityEffects" aria-hidden="true">
+            <span class="ability-effect ability-effect-lightning" data-effect="lightning">
+              <svg viewBox="0 0 72 148">
+                <path d="M41 3 14 76h22l-8 69 34-87H40z" fill="#FFF36B" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+                <path d="M41 3 14 76h22l-8 69 34-87H40z" fill="none" stroke="#31BFFF" stroke-width="3" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="ability-effect ability-effect-repulse" data-effect="repulse">
+              <svg viewBox="0 0 90 90">
+                <g fill="none" stroke="#fff" stroke-linecap="round">
+                  <path d="M45 3v16M45 71v16M3 45h16M71 45h16M15 15l12 12m36 36 12 12M75 15 63 27M27 63 15 75" stroke-width="5"/>
+                  <circle cx="45" cy="45" r="26" stroke="#FFB347" stroke-width="5"/>
+                  <circle cx="45" cy="45" r="17" fill="#FFB347" fill-opacity=".8" stroke="#fff" stroke-width="4"/>
+                  <circle cx="45" cy="45" r="8" fill="#fff" stroke="#C8F7FF" stroke-width="3"/>
+                </g>
+              </svg>
+            </span>
+            <span class="ability-effect ability-effect-web" data-effect="web">
+              <svg viewBox="0 0 130 100">
+                <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <path pathLength="1" d="M4 96 126 4M20 82l3-30 28 19m-9-40 29 7-10 28m14-43 3 30-28-19m54 7-29-3 10-28M36 72l29-45m-7 60 28-45"/>
+                  <path pathLength="1" d="M4 96 126 4" stroke="#59D8FF" stroke-width="1.5"/>
+                </g>
+              </svg>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -358,6 +476,76 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
       </div>
 
       <ul class="grid" id="grid"></ul>
+    </div>
+  </section>
+
+  <!-- ================= FAN SIGN IN ================= -->
+  <section class="fan-sign-in" id="fan-sign-in" aria-labelledby="fanSignInTitle">
+    <div class="wrap">
+      <div class="community-card">
+        <h2 class="title" id="fanSignInTitle">Join the fan community</h2>
+        <p class="community-help">Each account gets a random fan nickname. Every 20th member unlocks a randomly selected Avengers hero name.</p>
+        <div id="communityAuth">
+          <h3 id="communityAuthTitle">Sign in to join in</h3>
+          <form class="community-form" id="communityAuthForm">
+            <label>Email
+              <input type="email" id="communityEmail" autocomplete="email" required>
+            </label>
+            <label>Password
+              <input type="password" id="communityPassword" autocomplete="current-password" minlength="8" required>
+            </label>
+            <button type="submit" class="btn small" id="communityAuthSubmit">Sign in</button>
+            <button type="button" class="btn small alt" id="communityAuthSwitch">Create an account</button>
+            <p class="community-status" id="communityAuthStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+        <div id="communityAccount" hidden>
+          <h3 id="fanAccountTitle">You’re signed in as a fan</h3>
+          <div class="community-account">
+            <span id="communityUser"></span>
+            <button type="button" class="btn small alt" id="communitySignOut">Sign out</button>
+          </div>
+          <p class="community-status" id="communityAccountStatus" role="status" aria-live="polite"></p>
+        </div>
+        <p class="community-help" id="communitySetupHelp" hidden>Community accounts are not connected yet. Add your Supabase project settings to <code>assets/community-config.js</code> and follow the setup steps in README.md.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COMMUNITY POLLS ================= -->
+  <section class="community" id="war-polls" aria-labelledby="communityTitle">
+    <div class="wrap">
+      <h2 class="title" id="communityTitle">Marvel fan polls</h2>
+      <p class="lede">Sign in to create a poll or vote. Ask a question and add an optional image or video for other fans to see.</p>
+      <div class="community-grid">
+        <div class="community-main">
+          <div class="community-card" id="pollComposer" hidden>
+            <h3>Create a poll</h3>
+            <form class="community-form" id="pollForm">
+              <label>Your question
+                <textarea id="pollQuestion" maxlength="200" required placeholder="Which hero would you want on your team?"></textarea>
+              </label>
+              <fieldset class="community-form poll-fieldset">
+                <legend>Answer options (2–6)</legend>
+                <div class="poll-option-fields" id="pollOptionFields"></div>
+                <button type="button" class="btn small alt" id="addPollOption">Add an answer</button>
+              </fieldset>
+              <label>Optional image or video
+                <input type="file" id="pollMedia" accept="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm,video/quicktime">
+              </label>
+              <p class="poll-media-note">Uploads are publicly viewable with the poll. Images up to 10 MB and videos up to 50 MB.</p>
+              <button type="submit" class="btn small" id="createPollButton">Post poll</button>
+              <p class="community-status" id="pollCreateStatus" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+
+          <div class="poll-list" aria-labelledby="pollListTitle">
+            <h3 id="pollListTitle">Latest polls</h3>
+            <p class="community-status" id="pollListStatus" role="status" aria-live="polite"></p>
+            <div id="communityPolls" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -447,6 +635,8 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
 
 <noscript><p style="background:#fff;color:#14102A;padding:16px;text-align:center">This site needs JavaScript to show the movie list and the quiz.</p></noscript>
 
+<script src="assets/community-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (() => {
 'use strict';
@@ -456,11 +646,399 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shuffle = a => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+const supabaseConfig = window.MARVEL_SUPABASE_CONFIG || {};
+let communityClient = null;
+let communityClientError = '';
+try {
+  if (window.supabase && supabaseConfig.url && supabaseConfig.anonKey) {
+    communityClient = window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey);
+  }
+} catch (error) {
+  communityClientError = `Community setup error: ${error.message}`;
+}
+if (!communityClient && !communityClientError && supabaseConfig.url && supabaseConfig.anonKey) {
+  communityClientError = 'The community service library did not load. Check your connection and reload the page.';
+}
 const store = {
   get(k, fallback) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } }
 };
 const fmtDate = iso => new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+/* ============ Community polls ============ */
+const communityAuthForm = $('#communityAuthForm');
+const communityAuthStatus = $('#communityAuthStatus');
+const pollCreateStatus = $('#pollCreateStatus');
+const pollListStatus = $('#pollListStatus');
+const communityPolls = $('#communityPolls');
+const pollOptionFields = $('#pollOptionFields');
+const communityMotionObserver = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  && 'IntersectionObserver' in window
+  ? new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add('is-in-view');
+        communityMotionObserver.unobserve(entry.target);
+      }
+    }, { threshold: 0.15 })
+  : null;
+let communitySession = null;
+let profileRequestId = 0;
+let communityAuthMode = 'signin';
+const pollBucket = 'community-poll-media';
+const acceptedMedia = {
+  'image/jpeg': { kind: 'image', ext: 'jpg', limit: 10 * 1024 * 1024 },
+  'image/png': { kind: 'image', ext: 'png', limit: 10 * 1024 * 1024 },
+  'image/gif': { kind: 'image', ext: 'gif', limit: 10 * 1024 * 1024 },
+  'image/webp': { kind: 'image', ext: 'webp', limit: 10 * 1024 * 1024 },
+  'video/mp4': { kind: 'video', ext: 'mp4', limit: 50 * 1024 * 1024 },
+  'video/webm': { kind: 'video', ext: 'webm', limit: 50 * 1024 * 1024 },
+  'video/quicktime': { kind: 'video', ext: 'mov', limit: 50 * 1024 * 1024 }
+};
+
+function setCommunityStatus(element, message) {
+  if (element) element.textContent = message;
+}
+
+function watchCommunityMotion(root = document) {
+  if (!communityMotionObserver) return;
+  $$('.fan-sign-in .community-card:not(.is-in-view), .poll-card:not(.is-in-view)', root)
+    .forEach(element => communityMotionObserver.observe(element));
+}
+
+watchCommunityMotion();
+
+function appendPollOption(value = '') {
+  if (pollOptionFields.children.length >= 6) return;
+  const row = document.createElement('div');
+  row.className = 'poll-option-row';
+  row.innerHTML = `<label>Answer ${pollOptionFields.children.length + 1}<input name="pollOption" maxlength="80" required value="${esc(value)}" placeholder="Type an answer"></label><button type="button" class="poll-remove" aria-label="Remove this answer" title="Remove this answer">×</button>`;
+  pollOptionFields.append(row);
+  refreshPollOptionLabels();
+}
+
+function refreshPollOptionLabels() {
+  const rows = [...pollOptionFields.children];
+  rows.forEach((row, index) => {
+    $('label', row).childNodes[0].textContent = `Answer ${index + 1}`;
+    $('.poll-remove', row).disabled = rows.length <= 2;
+  });
+  $('#addPollOption').disabled = rows.length >= 6;
+}
+
+function updateCommunityAccount(session) {
+  communitySession = session;
+  const requestId = ++profileRequestId;
+  const signedIn = Boolean(session?.user);
+  setCommunityStatus($('#communityAccountStatus'), '');
+  $('#communityAuth').hidden = signedIn || !communityClient;
+  $('#communityAccount').hidden = !signedIn;
+  $('#pollComposer').hidden = !signedIn;
+  $('.community-main').classList.toggle('is-signed-out', !signedIn);
+  $('#communitySetupHelp').hidden = Boolean(communityClient);
+  if (signedIn) {
+    $('#communityUser').textContent = 'Finding your fan nickname…';
+    window.setTimeout(() => loadCommunityProfile(session.user.id, requestId), 0);
+  } else {
+    $('#fanAccountTitle').textContent = 'You’re signed in as a fan';
+  }
+}
+
+async function loadCommunityProfile(userId, requestId) {
+  try {
+    const { data, error } = await communityClient
+      .from('community_profiles')
+      .select('nickname, is_avenger')
+      .eq('user_id', userId)
+      .single();
+    if (requestId !== profileRequestId) return;
+    if (error) {
+      $('#communityUser').textContent = 'Signed-in fan';
+      setCommunityStatus($('#communityAccountStatus'), `Could not load your fan nickname: ${error.message}`);
+      return;
+    }
+    $('#communityUser').textContent = data.nickname;
+    $('#fanAccountTitle').textContent = data.is_avenger ? 'Avenger nickname unlocked!' : 'Your fan nickname';
+  } catch (error) {
+    if (requestId !== profileRequestId) return;
+    $('#communityUser').textContent = 'Signed-in fan';
+    setCommunityStatus($('#communityAccountStatus'), `Could not load your fan nickname: ${error.message}`);
+  }
+}
+
+function renderCommunityPolls(polls, results) {
+  const resultByPoll = new Map();
+  for (const result of results) {
+    if (!resultByPoll.has(result.poll_id)) resultByPoll.set(result.poll_id, []);
+    resultByPoll.get(result.poll_id).push(result);
+  }
+
+  if (!polls.length) {
+    communityPolls.innerHTML = '<p class="poll-empty">No polls yet. Sign in and be the first to ask the community!</p>';
+    return;
+  }
+
+  communityPolls.innerHTML = polls.map((poll, pollIndex) => {
+    const pollResults = resultByPoll.get(poll.id) || [];
+    const counts = new Map(pollResults.map(item => [Number(item.option_index), Number(item.vote_count)]));
+    const totalVotes = [...counts.values()].reduce((sum, count) => sum + count, 0);
+    const viewerOption = pollResults.length && pollResults[0].viewer_option_index !== null
+      ? Number(pollResults[0].viewer_option_index)
+      : null;
+    const mediaUrl = poll.media_path
+      ? communityClient.storage.from(pollBucket).getPublicUrl(poll.media_path).data.publicUrl
+      : '';
+    const media = mediaUrl && poll.media_type === 'video'
+      ? `<video class="poll-media" controls preload="metadata" src="${esc(mediaUrl)}"></video>`
+      : mediaUrl && poll.media_type === 'image'
+        ? `<img class="poll-media" src="${esc(mediaUrl)}" alt="Media attached to this poll" loading="lazy">`
+        : '';
+    const options = poll.options.map((option, index) => {
+      const count = counts.get(index) || 0;
+      const percent = totalVotes ? Math.round(count / totalVotes * 100) : 0;
+      const selected = viewerOption === index;
+      const disabled = !communitySession || viewerOption !== null;
+      return `<button type="button" class="poll-choice${selected ? ' is-selected' : ''}" data-poll-id="${esc(poll.id)}" data-option-index="${index}" style="--poll-percent:${percent}%" ${disabled ? 'disabled' : ''}><span class="poll-choice-label"><span>${esc(option)}</span><span>${count} · ${percent}%</span></span></button>`;
+    }).join('');
+    const date = new Date(poll.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    const author = poll.author_nickname ? `Posted by ${esc(poll.author_nickname)} · ` : '';
+    return `<article class="poll-card" style="--poll-index:${pollIndex}"><h4>${esc(poll.question)}</h4><p class="poll-author">${author}${esc(date)}</p>${media}<div class="poll-choice-list">${options}</div><p class="poll-meta">${totalVotes} ${totalVotes === 1 ? 'vote' : 'votes'}${!communitySession && viewerOption === null ? ' · Sign in to vote' : ''}</p></article>`;
+  }).join('');
+  watchCommunityMotion(communityPolls);
+}
+
+async function loadCommunityPolls() {
+  if (!communityClient) {
+    setCommunityStatus(pollListStatus, communityClientError || 'Polls will appear here after the community is connected.');
+    return;
+  }
+  setCommunityStatus(pollListStatus, 'Loading polls…');
+  try {
+    const { data: polls, error: pollError } = await communityClient
+      .from('community_polls')
+      .select('id, question, author_nickname, media_path, media_type, options, created_at')
+      .order('created_at', { ascending: false })
+      .limit(30);
+    if (pollError) {
+      setCommunityStatus(pollListStatus, `Could not load polls: ${pollError.message}`);
+      communityPolls.innerHTML = '';
+      return;
+    }
+    let results = [];
+    if (polls.length) {
+      const { data, error } = await communityClient.rpc('get_community_poll_results', {
+        p_poll_ids: polls.map(poll => poll.id)
+      });
+      if (error) {
+        setCommunityStatus(pollListStatus, `Could not load poll results: ${error.message}`);
+        communityPolls.innerHTML = '';
+        return;
+      }
+      results = data || [];
+    }
+    setCommunityStatus(pollListStatus, '');
+    renderCommunityPolls(polls, results);
+  } catch (error) {
+    setCommunityStatus(pollListStatus, `Could not reach the polls service: ${error.message}`);
+    communityPolls.innerHTML = '';
+  }
+}
+
+function updateAuthMode() {
+  const signingUp = communityAuthMode === 'signup';
+  $('#communityAuthTitle').textContent = signingUp ? 'Create your fan account' : 'Sign in to join in';
+  $('#communityAuthSubmit').textContent = signingUp ? 'Create account' : 'Sign in';
+  $('#communityAuthSwitch').textContent = signingUp ? 'I already have an account' : 'Create an account';
+  $('#communityPassword').autocomplete = signingUp ? 'new-password' : 'current-password';
+}
+
+$('#communityAuthSwitch').addEventListener('click', () => {
+  communityAuthMode = communityAuthMode === 'signin' ? 'signup' : 'signin';
+  setCommunityStatus(communityAuthStatus, '');
+  updateAuthMode();
+});
+
+communityAuthForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  if (!communityClient) return;
+  const email = $('#communityEmail').value.trim();
+  const password = $('#communityPassword').value;
+  const submit = $('#communityAuthSubmit');
+  submit.disabled = true;
+  setCommunityStatus(communityAuthStatus, communityAuthMode === 'signup' ? 'Creating your account…' : 'Signing in…');
+  try {
+    const result = communityAuthMode === 'signup'
+      ? await communityClient.auth.signUp({ email, password })
+      : await communityClient.auth.signInWithPassword({ email, password });
+    if (result.error) {
+      setCommunityStatus(communityAuthStatus, `Could not ${communityAuthMode === 'signup' ? 'create account' : 'sign in'}: ${result.error.message}`);
+      return;
+    }
+    if (communityAuthMode === 'signup' && !result.data.session) {
+      setCommunityStatus(communityAuthStatus, 'Check your email for a confirmation link, then sign in here.');
+      return;
+    }
+    setCommunityStatus(communityAuthStatus, '');
+    communityAuthForm.reset();
+  } catch (error) {
+    setCommunityStatus(communityAuthStatus, `Could not reach the sign-in service: ${error.message}`);
+  } finally {
+    submit.disabled = false;
+  }
+});
+
+$('#communitySignOut').addEventListener('click', async () => {
+  if (!communityClient) return;
+  try {
+    const { error } = await communityClient.auth.signOut();
+    if (error) setCommunityStatus($('#communityAccountStatus'), `Could not sign out: ${error.message}`);
+  } catch (error) {
+    setCommunityStatus($('#communityAccountStatus'), `Could not reach the sign-in service: ${error.message}`);
+  }
+});
+
+$('#addPollOption').addEventListener('click', () => appendPollOption());
+pollOptionFields.addEventListener('click', event => {
+  const remove = event.target.closest('.poll-remove');
+  if (!remove || pollOptionFields.children.length <= 2) return;
+  remove.closest('.poll-option-row').remove();
+  refreshPollOptionLabels();
+});
+
+$('#pollMedia').addEventListener('change', event => {
+  const file = event.target.files[0];
+  if (!file) return setCommunityStatus(pollCreateStatus, '');
+  const media = acceptedMedia[file.type];
+  if (!media) {
+    event.target.value = '';
+    setCommunityStatus(pollCreateStatus, 'Choose a JPEG, PNG, GIF, WebP image or MP4, WebM, QuickTime video.');
+  } else if (file.size > media.limit) {
+    event.target.value = '';
+    setCommunityStatus(pollCreateStatus, `That file is too large. The limit for ${media.kind}s is ${media.limit / 1024 / 1024} MB.`);
+  } else {
+    setCommunityStatus(pollCreateStatus, '');
+  }
+});
+
+$('#pollForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (!communityClient || !communitySession?.user) return;
+  const question = $('#pollQuestion').value.trim();
+  const options = $$('[name="pollOption"]', pollOptionFields).map(input => input.value.trim());
+  const normalizedOptions = options.map(option => option.toLocaleLowerCase());
+  if (question.length < 5 || options.some(option => !option)) {
+    setCommunityStatus(pollCreateStatus, 'Enter a question of at least 5 characters and fill in every answer.');
+    return;
+  }
+  if (new Set(normalizedOptions).size !== normalizedOptions.length) {
+    setCommunityStatus(pollCreateStatus, 'Each answer option must be different.');
+    return;
+  }
+  const file = $('#pollMedia').files[0];
+  const media = file ? acceptedMedia[file.type] : null;
+  if (file && (!media || file.size > media.limit)) {
+    setCommunityStatus(pollCreateStatus, 'Choose a supported image or video within the file size limit.');
+    return;
+  }
+
+  const submit = $('#createPollButton');
+  submit.disabled = true;
+  setCommunityStatus(pollCreateStatus, 'Posting your poll…');
+  let uploadedPath = null;
+  try {
+    if (file) {
+      uploadedPath = `${communitySession.user.id}/${crypto.randomUUID()}.${media.ext}`;
+      const { error } = await communityClient.storage.from(pollBucket).upload(uploadedPath, file, {
+        cacheControl: '3600',
+        contentType: file.type,
+        upsert: false
+      });
+      if (error) throw new Error(`Media upload failed: ${error.message}`);
+    }
+    const { error } = await communityClient.from('community_polls').insert({
+      question,
+      options,
+      created_by: communitySession.user.id,
+      media_path: uploadedPath,
+      media_type: media?.kind || null
+    });
+    if (error) {
+      if (uploadedPath) {
+        const { error: cleanupError } = await communityClient.storage.from(pollBucket).remove([uploadedPath]);
+        if (cleanupError) throw new Error(`Poll could not be posted: ${error.message}. Uploaded media cleanup failed: ${cleanupError.message}`);
+      }
+      throw new Error(`Poll could not be posted: ${error.message}`);
+    }
+    $('#pollForm').reset();
+    pollOptionFields.innerHTML = '';
+    appendPollOption();
+    appendPollOption();
+    setCommunityStatus(pollCreateStatus, 'Your poll is live!');
+    await loadCommunityPolls();
+  } catch (error) {
+    setCommunityStatus(pollCreateStatus, error.message);
+  } finally {
+    submit.disabled = false;
+  }
+});
+
+communityPolls.addEventListener('click', async event => {
+  const button = event.target.closest('.poll-choice');
+  if (!button) return;
+  if (!communitySession?.user) {
+    setCommunityStatus(communityAuthStatus, 'Sign in to vote in this poll.');
+    $('#fan-sign-in').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    $('#communityEmail').focus({ preventScroll: true });
+    return;
+  }
+  const optionIndex = Number(button.dataset.optionIndex);
+  if (!Number.isInteger(optionIndex)) return;
+  button.disabled = true;
+  try {
+    const { error } = await communityClient.from('community_poll_votes').insert({
+      poll_id: button.dataset.pollId,
+      user_id: communitySession.user.id,
+      option_index: optionIndex
+    });
+    if (error) {
+      setCommunityStatus(pollListStatus, `Your vote was not saved: ${error.message}`);
+      button.disabled = false;
+      return;
+    }
+    setCommunityStatus(pollListStatus, 'Vote counted!');
+    await loadCommunityPolls();
+  } catch (error) {
+    setCommunityStatus(pollListStatus, `Could not reach the voting service: ${error.message}`);
+    button.disabled = false;
+  }
+});
+
+if (communityClient) {
+  updateCommunityAccount(null);
+  pollOptionFields.replaceChildren();
+  appendPollOption();
+  appendPollOption();
+  updateAuthMode();
+  communityClient.auth.onAuthStateChange((_event, session) => {
+    updateCommunityAccount(session);
+    loadCommunityPolls();
+  });
+  communityClient.auth.getSession()
+    .then(({ data, error }) => {
+      if (error) {
+        setCommunityStatus(communityAuthStatus, `Could not restore your sign-in: ${error.message}`);
+        return;
+      }
+      updateCommunityAccount(data.session);
+      loadCommunityPolls();
+    })
+    .catch(error => setCommunityStatus(communityAuthStatus, `Could not restore your sign-in: ${error.message}`));
+} else {
+  updateCommunityAccount(null);
+  setCommunityStatus(communityAuthStatus, communityClientError || '');
+  setCommunityStatus(pollListStatus, communityClientError || 'Connect a Supabase project to enable shared polls and sign-in.');
+  if (!communityClientError) $('#communitySetupHelp').hidden = false;
+}
 
 /* Starburst polygon used for comic "POW" shapes */
 function star(n, outer, inner) {
@@ -484,18 +1062,86 @@ const comicPages = [
 
 const comicPage = document.querySelector('.page');
 const pageArt = document.getElementById('pageArt');
+const pageArtNext = document.getElementById('pageArtNext');
+const effectLayer = document.getElementById('abilityEffects');
+const effects = [...document.querySelectorAll('.ability-effect')];
+const effectNames = ['lightning', 'repulse', 'web'];
+let comicImageLoadId = 0;
+let effectTimer = null;
+let lastEffect = '';
+
+function fireAbilityEffect() {
+  if (!effectLayer || !effects.length || document.hidden) return;
+  const availableEffects = effectNames.filter(name => name !== lastEffect);
+  const effectName = availableEffects[Math.floor(Math.random() * availableEffects.length)];
+  const effect = effects.find(item => item.dataset.effect === effectName);
+  if (!effect) return;
+
+  const edge = ['top', 'right', 'bottom', 'left'][Math.floor(Math.random() * 4)];
+  const offset = 14 + Math.random() * 72;
+  const positions = {
+    top: { x: `${offset}%`, y: '5%', angle: '0deg' },
+    right: { x: '95%', y: `${offset}%`, angle: '90deg' },
+    bottom: { x: `${offset}%`, y: '95%', angle: '180deg' },
+    left: { x: '5%', y: `${offset}%`, angle: '-90deg' }
+  };
+  const position = positions[edge];
+
+  effect.style.setProperty('--effect-x', position.x);
+  effect.style.setProperty('--effect-y', position.y);
+  effect.style.setProperty('--effect-angle', position.angle);
+  effect.classList.remove('is-active');
+  void effect.offsetWidth;
+  effect.classList.add('is-active');
+  lastEffect = effectName;
+
+  const clearEffect = event => {
+    if (event.target !== effect || event.animationName !== 'effectFlash') return;
+    effect.classList.remove('is-active');
+    effect.removeEventListener('animationend', clearEffect);
+  };
+  effect.addEventListener('animationend', clearEffect);
+}
+
+function scheduleAbilityEffect() {
+  clearTimeout(effectTimer);
+  if (document.hidden || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  effectTimer = window.setTimeout(() => {
+    fireAbilityEffect();
+    scheduleAbilityEffect();
+  }, 1800 + Math.random() * 2600);
+}
+
+scheduleAbilityEffect();
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) clearTimeout(effectTimer);
+  else scheduleAbilityEffect();
+});
+window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', scheduleAbilityEffect);
 
 function setComicScene(dir) {
-  if (!comicPage || !pageArt) return;
+  if (!comicPage || !pageArt || !pageArtNext) return;
   const current = Number(comicPage.dataset.scene || 0);
   const next = (current + dir + comicPages.length) % comicPages.length;
   comicPage.dataset.scene = String(next);
-  comicPage.classList.remove('is-animating');
-  void comicPage.offsetWidth;
-  comicPage.classList.add('is-animating');
 
-  pageArt.src = comicPages[next].src;
-  pageArt.alt = comicPages[next].alt;
+  const outgoing = pageArt.classList.contains('is-visible') ? pageArt : pageArtNext;
+  const incoming = outgoing === pageArt ? pageArtNext : pageArt;
+  const loadId = ++comicImageLoadId;
+  incoming.onload = () => {
+    if (loadId !== comicImageLoadId) return;
+    incoming.alt = comicPages[next].alt;
+    incoming.removeAttribute('aria-hidden');
+    outgoing.alt = '';
+    outgoing.setAttribute('aria-hidden', 'true');
+    incoming.classList.add('is-visible');
+    outgoing.classList.remove('is-visible');
+  };
+  incoming.onerror = () => {
+    if (loadId === comicImageLoadId) comicPage.dataset.scene = String(current);
+  };
+  incoming.src = comicPages[next].src;
+  if (incoming.complete && incoming.naturalWidth) incoming.onload();
 }
 
 comicPage.addEventListener('click', e => {
