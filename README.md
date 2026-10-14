@@ -20,3 +20,12 @@ of the movie guide works without a Supabase project.
    a randomly chosen Avengers hero nickname. Polls display that nickname
    instead of the account email. Each account can vote once per poll. Uploaded
    poll media is public and cannot contain private content.
+
+War Polls are two-contender matchups; Fan Polls allow 2-6 custom answers.
+Signed-in users can report a poll once for moderator review. Reports are private
+to the database owner and must be reviewed in the Supabase dashboard; the site
+does not include a moderator console. If the community database is already set
+up, run the updated SQL file again to add War Poll types and report storage.
+If only image/video uploads are missing, copy the standalone **MEDIA STORAGE
+FIX** block at the top of `supabase-community.sql` into Supabase SQL Editor and
+run that block; its final query confirms the bucket was created.

@@ -293,6 +293,17 @@ dialog::backdrop{background:rgba(20,16,42,.74);background-image:radial-gradient(
 .community-main.is-signed-out{grid-template-columns:1fr}
 .community-card{background:#fff;border:var(--border);box-shadow:8px 8px 0 var(--ink);padding:22px}
 .community-card h3{font-size:1.8rem;margin-bottom:14px}
+.poll-guidelines{background:var(--sun);border:3px solid var(--ink);padding:12px 14px;margin:16px 0;font-size:.9rem}
+.poll-type-switch{display:flex;flex-wrap:wrap;gap:10px}
+.poll-type-switch label{display:flex;flex:1;min-width:180px;align-items:center;gap:9px;border:3px solid var(--ink);padding:10px;background:#fff;cursor:pointer}
+.poll-type-switch input{width:20px;height:20px;accent-color:var(--blue)}
+.poll-contenders{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px}
+.poll-contenders[hidden],.poll-option-fields[hidden]{display:none}
+.poll-versus{align-self:end;padding:0 0 8px;font-family:var(--f-display);font-size:1.8rem;text-align:center}
+.poll-filter-bar{display:flex;flex-wrap:wrap;gap:9px}
+.poll-filter{border:3px solid var(--ink);background:#fff;padding:6px 12px;font-family:var(--f-display);font-size:1.05rem;letter-spacing:.03em;box-shadow:3px 3px 0 var(--ink);transition:transform .15s ease,background-color .15s ease,color .15s ease}
+.poll-filter:hover{transform:translateY(-2px)}
+.poll-filter[aria-pressed="true"]{background:var(--ink);color:#fff;transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
 .community-form{display:grid;gap:14px}
 .community-form label{display:grid;gap:6px;font-weight:700}
 .community-form input,.community-form textarea{width:100%;font:inherit;border:3px solid var(--ink);padding:10px 12px;background:#fff;color:var(--ink)}
@@ -315,6 +326,8 @@ dialog::backdrop{background:rgba(20,16,42,.74);background-image:radial-gradient(
 .poll-card{background:#fff;border:var(--border);box-shadow:5px 5px 0 var(--ink);padding:18px}
 .poll-card h4{font-family:var(--f-body);font-size:1.2rem;line-height:1.35;letter-spacing:0;margin-bottom:12px}
 .poll-author{margin:-5px 0 10px;font-size:.85rem;font-weight:700;color:var(--soft-ink)}
+.poll-badge{display:inline-block;background:var(--red);color:#fff;border:2px solid var(--ink);padding:1px 7px;margin-right:7px;font-family:var(--f-display);font-size:.88rem;letter-spacing:.04em}
+.poll-badge.community-poll-badge{background:var(--blue);background-image:none;padding-top:1px}
 .poll-media{display:block;width:100%;max-height:420px;object-fit:contain;background:var(--ink);margin:0 0 14px}
 .poll-choice-list{display:grid;gap:9px}
 .poll-choice{position:relative;isolation:isolate;overflow:hidden;width:100%;min-height:48px;text-align:left;background:#fff;border:3px solid var(--ink);padding:9px 12px;font:inherit;font-weight:700}
@@ -325,6 +338,15 @@ dialog::backdrop{background:rgba(20,16,42,.74);background-image:radial-gradient(
 .poll-choice.is-selected{outline:3px solid var(--blue);outline-offset:1px}
 .poll-choice-label{display:flex;justify-content:space-between;gap:12px}
 .poll-meta{margin-top:12px;font-size:.82rem;color:var(--soft-ink)}
+.poll-card-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;margin-top:12px}
+.poll-report-toggle{border:2px solid var(--ink);background:#fff;padding:5px 10px;font:inherit;font-size:.82rem;font-weight:700}
+.poll-report-toggle:hover{background:var(--bad)}
+.poll-report-form{display:grid;gap:9px;margin-top:12px;padding:12px;border:2px solid var(--ink);background:#fff}
+.poll-report-form[hidden]{display:none}
+.poll-report-form label{display:grid;gap:5px;font-size:.85rem;font-weight:700}
+.poll-report-form select,.poll-report-form textarea{width:100%;font:inherit;border:2px solid var(--ink);padding:7px}
+.poll-report-form textarea{min-height:64px;resize:vertical}
+.poll-report-status{font-size:.85rem;font-weight:700}
 .poll-empty{background:#fff;border:3px dashed var(--ink);padding:18px}
 
 /* Footer */
@@ -352,6 +374,8 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
   .pop .bt{font-size:1.8rem}
   .tools{grid-template-columns:1fr}
   .community-main{grid-template-columns:1fr}
+  .poll-contenders{grid-template-columns:1fr}
+  .poll-versus{padding:0;text-align:center}
   .movies,.quiz{padding-left:16px;padding-right:16px}
 }
 @media (max-width:520px){
@@ -515,17 +539,37 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
   <!-- ================= COMMUNITY POLLS ================= -->
   <section class="community" id="war-polls" aria-labelledby="communityTitle">
     <div class="wrap">
-      <h2 class="title" id="communityTitle">Marvel fan polls</h2>
-      <p class="lede">Sign in to create a poll or vote. Ask a question and add an optional image or video for other fans to see.</p>
+      <h2 class="title" id="communityTitle">War Polls &amp; Fan Questions</h2>
+      <p class="lede">Settle superhero showdowns in a War Poll, or ask the fans anything Marvel. Sign in to vote, post questions, and share media.</p>
       <div class="community-grid">
         <div class="community-main">
           <div class="community-card" id="pollComposer" hidden>
-            <h3>Create a poll</h3>
+            <h3>Create a fan poll</h3>
+            <p class="poll-guidelines"><b>Keep it heroic:</b> be respectful, post Marvel-related questions, and only upload media you have permission to share. Public uploads and poll text may be reported for moderator review.</p>
             <form class="community-form" id="pollForm">
+              <fieldset class="community-form poll-fieldset">
+                <legend>Choose your poll type</legend>
+                <div class="poll-type-switch">
+                  <label><input type="radio" name="pollType" value="war" checked> War Poll matchup</label>
+                  <label><input type="radio" name="pollType" value="community"> Fan question</label>
+                </div>
+              </fieldset>
               <label>Your question
                 <textarea id="pollQuestion" maxlength="200" required placeholder="Which hero would you want on your team?"></textarea>
               </label>
-              <fieldset class="community-form poll-fieldset">
+              <fieldset class="community-form poll-fieldset" id="pollMatchupFields">
+                <legend>Who would win?</legend>
+                <div class="poll-contenders">
+                  <label>Contender 1
+                    <input type="text" id="pollContenderOne" maxlength="80" placeholder="Thor" required>
+                  </label>
+                  <span class="poll-versus" aria-hidden="true">VS</span>
+                  <label>Contender 2
+                    <input type="text" id="pollContenderTwo" maxlength="80" placeholder="Hulk" required>
+                  </label>
+                </div>
+              </fieldset>
+              <fieldset class="community-form poll-fieldset" id="pollAnswerFields" hidden>
                 <legend>Answer options (2–6)</legend>
                 <div class="poll-option-fields" id="pollOptionFields"></div>
                 <button type="button" class="btn small alt" id="addPollOption">Add an answer</button>
@@ -542,6 +586,11 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
           <div class="poll-list" aria-labelledby="pollListTitle">
             <h3 id="pollListTitle">Latest polls</h3>
             <p class="community-status" id="pollListStatus" role="status" aria-live="polite"></p>
+            <div class="poll-filter-bar" id="pollFilters" role="group" aria-label="Filter polls">
+              <button type="button" class="poll-filter" data-poll-filter="all" aria-pressed="true">All</button>
+              <button type="button" class="poll-filter" data-poll-filter="war" aria-pressed="false">War Polls</button>
+              <button type="button" class="poll-filter" data-poll-filter="community" aria-pressed="false">Fan questions</button>
+            </div>
             <div id="communityPolls" aria-live="polite"></div>
           </div>
         </div>
@@ -685,6 +734,12 @@ const communityMotionObserver = !window.matchMedia('(prefers-reduced-motion: red
 let communitySession = null;
 let profileRequestId = 0;
 let communityAuthMode = 'signin';
+let authSubmitting = false;
+let signupCooldownUntil = 0;
+let signupCooldownTimer = null;
+let pollFilter = 'all';
+let loadedPolls = [];
+let loadedPollResults = [];
 const pollBucket = 'community-poll-media';
 const acceptedMedia = {
   'image/jpeg': { kind: 'image', ext: 'jpg', limit: 10 * 1024 * 1024 },
@@ -724,6 +779,23 @@ function refreshPollOptionLabels() {
     $('.poll-remove', row).disabled = rows.length <= 2;
   });
   $('#addPollOption').disabled = rows.length >= 6;
+}
+
+function updatePollTypeFields() {
+  const isWarPoll = $('input[name="pollType"]:checked').value === 'war';
+  $('#pollMatchupFields').hidden = !isWarPoll;
+  $('#pollAnswerFields').hidden = isWarPoll;
+  $('#pollContenderOne').disabled = !isWarPoll;
+  $('#pollContenderTwo').disabled = !isWarPoll;
+  $('#pollContenderOne').required = isWarPoll;
+  $('#pollContenderTwo').required = isWarPoll;
+  $$('[name="pollOption"]', pollOptionFields).forEach(input => {
+    input.disabled = isWarPoll;
+    input.required = !isWarPoll;
+  });
+  $('#pollQuestion').placeholder = isWarPoll
+    ? 'Who would win in a showdown?'
+    : 'Which hero would you want on your team?';
 }
 
 function updateCommunityAccount(session) {
@@ -767,18 +839,26 @@ async function loadCommunityProfile(userId, requestId) {
 }
 
 function renderCommunityPolls(polls, results) {
+  loadedPolls = polls;
+  loadedPollResults = results;
+  const visiblePolls = pollFilter === 'all'
+    ? polls
+    : polls.filter(poll => (poll.poll_type || 'community') === pollFilter);
   const resultByPoll = new Map();
   for (const result of results) {
     if (!resultByPoll.has(result.poll_id)) resultByPoll.set(result.poll_id, []);
     resultByPoll.get(result.poll_id).push(result);
   }
 
-  if (!polls.length) {
-    communityPolls.innerHTML = '<p class="poll-empty">No polls yet. Sign in and be the first to ask the community!</p>';
+  if (!visiblePolls.length) {
+    const message = polls.length
+      ? 'No polls match this filter yet.'
+      : 'No polls yet. Sign in and be the first to ask the community!';
+    communityPolls.innerHTML = `<p class="poll-empty">${message}</p>`;
     return;
   }
 
-  communityPolls.innerHTML = polls.map((poll, pollIndex) => {
+  communityPolls.innerHTML = visiblePolls.map((poll, pollIndex) => {
     const pollResults = resultByPoll.get(poll.id) || [];
     const counts = new Map(pollResults.map(item => [Number(item.option_index), Number(item.vote_count)]));
     const totalVotes = [...counts.values()].reduce((sum, count) => sum + count, 0);
@@ -802,7 +882,19 @@ function renderCommunityPolls(polls, results) {
     }).join('');
     const date = new Date(poll.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
     const author = poll.author_nickname ? `Posted by ${esc(poll.author_nickname)} · ` : '';
-    return `<article class="poll-card" style="--poll-index:${pollIndex}"><h4>${esc(poll.question)}</h4><p class="poll-author">${author}${esc(date)}</p>${media}<div class="poll-choice-list">${options}</div><p class="poll-meta">${totalVotes} ${totalVotes === 1 ? 'vote' : 'votes'}${!communitySession && viewerOption === null ? ' · Sign in to vote' : ''}</p></article>`;
+    const isWarPoll = poll.poll_type === 'war';
+    const badge = isWarPoll
+      ? '<span class="poll-badge">WAR POLL</span>'
+      : '<span class="poll-badge community-poll-badge">FAN POLL</span>';
+    const reportButton = communitySession
+      ? `<button type="button" class="poll-report-toggle" data-report-toggle="${esc(poll.id)}" aria-expanded="false">Report poll</button>`
+      : communityClient
+        ? '<button type="button" class="poll-report-toggle" data-report-sign-in>Report poll</button>'
+        : '';
+    const reportForm = communitySession
+      ? `<form class="poll-report-form" data-report-form="${esc(poll.id)}" hidden><label>Why are you reporting this?<select name="reason" required><option value="">Choose a reason</option><option value="inappropriate_media">Inappropriate image or video</option><option value="harassment">Harassment or abuse</option><option value="spam">Spam or misleading content</option><option value="other">Other concern</option></select></label><label>Details (optional)<textarea name="details" maxlength="500" placeholder="Add context for the moderators"></textarea></label><button type="submit" class="btn small alt">Send report</button><p class="poll-report-status" role="status" aria-live="polite"></p></form>`
+      : '';
+    return `<article class="poll-card" style="--poll-index:${pollIndex}"><h4>${badge}${esc(poll.question)}</h4><p class="poll-author">${author}${esc(date)}</p>${media}<div class="poll-choice-list">${options}</div><p class="poll-meta">${totalVotes} ${totalVotes === 1 ? 'vote' : 'votes'}${!communitySession && viewerOption === null ? ' · Sign in to vote' : ''}</p><div class="poll-card-actions">${reportButton}</div>${reportForm}</article>`;
   }).join('');
   watchCommunityMotion(communityPolls);
 }
@@ -816,7 +908,7 @@ async function loadCommunityPolls() {
   try {
     const { data: polls, error: pollError } = await communityClient
       .from('community_polls')
-      .select('id, question, author_nickname, media_path, media_type, options, created_at')
+      .select('id, question, poll_type, author_nickname, media_path, media_type, options, created_at')
       .order('created_at', { ascending: false })
       .limit(30);
     if (pollError) {
@@ -850,6 +942,35 @@ function updateAuthMode() {
   $('#communityAuthSubmit').textContent = signingUp ? 'Create account' : 'Sign in';
   $('#communityAuthSwitch').textContent = signingUp ? 'I already have an account' : 'Create an account';
   $('#communityPassword').autocomplete = signingUp ? 'new-password' : 'current-password';
+  updateAuthSubmitState();
+}
+
+function updateAuthSubmitState() {
+  const secondsRemaining = Math.ceil((signupCooldownUntil - Date.now()) / 1000);
+  const cooldownActive = communityAuthMode === 'signup' && secondsRemaining > 0;
+  $('#communityAuthSubmit').disabled = authSubmitting || cooldownActive;
+  $('#communityAuthSwitch').disabled = authSubmitting;
+  if (communityAuthMode === 'signup') {
+    $('#communityAuthSubmit').textContent = cooldownActive
+      ? `Try again in ${secondsRemaining}s`
+      : 'Create account';
+  } else {
+    $('#communityAuthSubmit').textContent = 'Sign in';
+  }
+}
+
+function startSignupCooldown(seconds) {
+  signupCooldownUntil = Date.now() + (seconds + 1) * 1000;
+  if (signupCooldownTimer) clearInterval(signupCooldownTimer);
+  const tick = () => {
+    updateAuthSubmitState();
+    if (Date.now() >= signupCooldownUntil) {
+      clearInterval(signupCooldownTimer);
+      signupCooldownTimer = null;
+    }
+  };
+  tick();
+  signupCooldownTimer = window.setInterval(tick, 1000);
 }
 
 $('#communityAuthSwitch').addEventListener('click', () => {
@@ -861,20 +982,37 @@ $('#communityAuthSwitch').addEventListener('click', () => {
 communityAuthForm.addEventListener('submit', async event => {
   event.preventDefault();
   if (!communityClient) return;
+  if (authSubmitting) return;
+  if (communityAuthMode === 'signup' && Date.now() < signupCooldownUntil) {
+    updateAuthSubmitState();
+    return;
+  }
+  const requestMode = communityAuthMode;
   const email = $('#communityEmail').value.trim();
   const password = $('#communityPassword').value;
-  const submit = $('#communityAuthSubmit');
-  submit.disabled = true;
-  setCommunityStatus(communityAuthStatus, communityAuthMode === 'signup' ? 'Creating your account…' : 'Signing in…');
+  authSubmitting = true;
+  updateAuthSubmitState();
+  setCommunityStatus(communityAuthStatus, requestMode === 'signup' ? 'Creating your account…' : 'Signing in…');
   try {
-    const result = communityAuthMode === 'signup'
+    const result = requestMode === 'signup'
       ? await communityClient.auth.signUp({ email, password })
       : await communityClient.auth.signInWithPassword({ email, password });
     if (result.error) {
-      setCommunityStatus(communityAuthStatus, `Could not ${communityAuthMode === 'signup' ? 'create account' : 'sign in'}: ${result.error.message}`);
+      const cooldownMatch = requestMode === 'signup'
+        && result.error.message.match(/only request this after (\d+) seconds?/i);
+      if (cooldownMatch) {
+        const seconds = Number(cooldownMatch[1]);
+        startSignupCooldown(seconds);
+        setCommunityStatus(
+          communityAuthStatus,
+          `Supabase is temporarily limiting account emails. Wait ${seconds} seconds before trying again. If you already submitted, check your email for a confirmation link first.`
+        );
+      } else {
+        setCommunityStatus(communityAuthStatus, `Could not ${requestMode === 'signup' ? 'create account' : 'sign in'}: ${result.error.message}`);
+      }
       return;
     }
-    if (communityAuthMode === 'signup' && !result.data.session) {
+    if (requestMode === 'signup' && !result.data.session) {
       setCommunityStatus(communityAuthStatus, 'Check your email for a confirmation link, then sign in here.');
       return;
     }
@@ -883,7 +1021,8 @@ communityAuthForm.addEventListener('submit', async event => {
   } catch (error) {
     setCommunityStatus(communityAuthStatus, `Could not reach the sign-in service: ${error.message}`);
   } finally {
-    submit.disabled = false;
+    authSubmitting = false;
+    updateAuthSubmitState();
   }
 });
 
@@ -895,6 +1034,20 @@ $('#communitySignOut').addEventListener('click', async () => {
   } catch (error) {
     setCommunityStatus($('#communityAccountStatus'), `Could not reach the sign-in service: ${error.message}`);
   }
+});
+
+$('#pollForm').addEventListener('change', event => {
+  if (event.target.name === 'pollType') updatePollTypeFields();
+});
+
+$('#pollFilters').addEventListener('click', event => {
+  const button = event.target.closest('[data-poll-filter]');
+  if (!button) return;
+  pollFilter = button.dataset.pollFilter;
+  $$('[data-poll-filter]', $('#pollFilters')).forEach(filterButton => {
+    filterButton.setAttribute('aria-pressed', String(filterButton === button));
+  });
+  renderCommunityPolls(loadedPolls, loadedPollResults);
 });
 
 $('#addPollOption').addEventListener('click', () => appendPollOption());
@@ -924,7 +1077,10 @@ $('#pollForm').addEventListener('submit', async event => {
   event.preventDefault();
   if (!communityClient || !communitySession?.user) return;
   const question = $('#pollQuestion').value.trim();
-  const options = $$('[name="pollOption"]', pollOptionFields).map(input => input.value.trim());
+  const pollType = $('input[name="pollType"]:checked').value;
+  const options = pollType === 'war'
+    ? [$('#pollContenderOne').value.trim(), $('#pollContenderTwo').value.trim()]
+    : $$('[name="pollOption"]', pollOptionFields).map(input => input.value.trim());
   const normalizedOptions = options.map(option => option.toLocaleLowerCase());
   if (question.length < 5 || options.some(option => !option)) {
     setCommunityStatus(pollCreateStatus, 'Enter a question of at least 5 characters and fill in every answer.');
@@ -958,6 +1114,7 @@ $('#pollForm').addEventListener('submit', async event => {
     const { error } = await communityClient.from('community_polls').insert({
       question,
       options,
+      poll_type: pollType,
       created_by: communitySession.user.id,
       media_path: uploadedPath,
       media_type: media?.kind || null
@@ -970,6 +1127,8 @@ $('#pollForm').addEventListener('submit', async event => {
       throw new Error(`Poll could not be posted: ${error.message}`);
     }
     $('#pollForm').reset();
+    $('input[name="pollType"][value="war"]').checked = true;
+    updatePollTypeFields();
     pollOptionFields.innerHTML = '';
     appendPollOption();
     appendPollOption();
@@ -983,6 +1142,23 @@ $('#pollForm').addEventListener('submit', async event => {
 });
 
 communityPolls.addEventListener('click', async event => {
+  const reportSignIn = event.target.closest('[data-report-sign-in]');
+  if (reportSignIn) {
+    setCommunityStatus(communityAuthStatus, 'Sign in to report a poll.');
+    $('#fan-sign-in').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    $('#communityEmail').focus({ preventScroll: true });
+    return;
+  }
+  const reportToggle = event.target.closest('[data-report-toggle]');
+  if (reportToggle) {
+    const form = $$('[data-report-form]', communityPolls)
+      .find(reportForm => reportForm.dataset.reportForm === reportToggle.dataset.reportToggle);
+    if (!form) return;
+    form.hidden = !form.hidden;
+    reportToggle.setAttribute('aria-expanded', String(!form.hidden));
+    if (!form.hidden) $('select', form).focus();
+    return;
+  }
   const button = event.target.closest('.poll-choice');
   if (!button) return;
   if (!communitySession?.user) {
@@ -1013,11 +1189,45 @@ communityPolls.addEventListener('click', async event => {
   }
 });
 
+communityPolls.addEventListener('submit', async event => {
+  const form = event.target.closest('[data-report-form]');
+  if (!form) return;
+  event.preventDefault();
+  if (!communityClient || !communitySession?.user) return;
+  const submit = $('button[type="submit"]', form);
+  const status = $('.poll-report-status', form);
+  submit.disabled = true;
+  setCommunityStatus(status, 'Sending report…');
+  try {
+    const { error } = await communityClient.from('community_poll_reports').insert({
+      poll_id: form.dataset.reportForm,
+      reporter_id: communitySession.user.id,
+      reason: $('select[name="reason"]', form).value,
+      details: $('textarea[name="details"]', form).value.trim() || null
+    });
+    if (error) {
+      setCommunityStatus(status, error.code === '23505'
+        ? 'You have already reported this poll.'
+        : `Your report was not sent: ${error.message}`);
+      submit.disabled = false;
+      return;
+    }
+    form.reset();
+    setCommunityStatus(status, 'Report sent to the moderators. Thank you.');
+    submit.disabled = true;
+  } catch (error) {
+    setCommunityStatus(status, `Could not send your report: ${error.message}`);
+    submit.disabled = false;
+  }
+});
+
 if (communityClient) {
   updateCommunityAccount(null);
   pollOptionFields.replaceChildren();
   appendPollOption();
   appendPollOption();
+  updatePollTypeFields();
+  updatePollTypeFields();
   updateAuthMode();
   communityClient.auth.onAuthStateChange((_event, session) => {
     updateCommunityAccount(session);
