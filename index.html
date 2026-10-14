@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MarvelVault: movie guide and quiz</title>
+<meta name="description" content="Browse every Marvel Cinematic Universe movie with a short story summary, then take a 10-question quiz to test your Marvel movie knowledge.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ Tokens ============ */
+:root{
+  --ink:#14102A;
+  --paper:#FFFFFF;
+  --sun:#FFD43B;
+  --sun-deep:#FFC21A;
+  --sky:#D6ECFF;
+  --red:#E8262D;
+  --blue:#1F5BFF;
+  --pink:#FF4FA3;
+  --good:#9BE7A5;
+  --bad:#FFB3B8;
+  --soft-ink:#3B3560;
+  --border:4px solid var(--ink);
+  --shadow:6px 6px 0 var(--ink);
+  --burst:circle(50%);
+  --f-display:"Bangers","Impact","Arial Black",system-ui,sans-serif;
+  --f-body:"Lexend","Segoe UI",system-ui,-apple-system,sans-serif;
+}
+
+/* ============ Base ============ */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;font-family:var(--f-body);color:var(--ink);background:var(--ink);line-height:1.55;font-size:1rem}
+h1,h2,h3,h4{margin:0;font-family:var(--f-display);font-weight:400;letter-spacing:.03em;line-height:1}
+p{margin:0}
+ul{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+[hidden]{display:none!important}
+:focus-visible{outline:4px solid var(--ink);outline-offset:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:12px;top:-70px;z-index:100;background:var(--ink);color:var(--sun);padding:8px 14px;font-family:var(--f-display);font-size:1.2rem;text-decoration:none}
+.skip:focus{top:12px;outline-color:var(--sun)}
+.wrap{max-width:1180px;margin:0 auto}
+
+/* Outlined comic lettering */
+.title{color:#fff;-webkit-text-stroke:8px var(--ink);paint-order:stroke fill;text-shadow:5px 5px 0 var(--pink);letter-spacing:.03em}
+@supports not (paint-order:stroke fill){
+  .title,.hero h1{-webkit-text-stroke:0;text-shadow:-3px -3px 0 var(--ink),3px -3px 0 var(--ink),-3px 3px 0 var(--ink),3px 3px 0 var(--ink),7px 7px 0 var(--pink)}
+}
+
+/* ============ Buttons ============ */
+.btn{display:inline-block;font-family:var(--f-display);font-size:1.5rem;letter-spacing:.05em;line-height:1;padding:12px 22px 14px;background:var(--red);color:#fff;border:var(--border);box-shadow:5px 5px 0 var(--ink);text-decoration:none;text-align:center;transition:transform .08s,box-shadow .08s}
+.btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--ink)}
+.btn:active{transform:translate(5px,5px);box-shadow:0 0 0 var(--ink)}
+.btn.alt{background:#fff;color:var(--ink)}
+.btn.small{font-size:1.15rem;padding:7px 14px 9px;box-shadow:3px 3px 0 var(--ink)}
+.btn.small:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
+.btn.small:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+
+/* ============ Header ============ */
+.top{position:sticky;top:0;z-index:20;background:var(--sun);border-bottom:var(--border)}
+.top-in{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{position:relative;display:inline-flex;align-items:center;justify-content:center;width:clamp(180px,26vw,420px);min-width:180px;padding:0;border:4px solid var(--ink);background:#e11b20;box-shadow:5px 5px 0 rgba(20,16,42,.82);transform:rotate(-1.5deg);text-decoration:none;overflow:hidden;isolation:isolate;transition:transform .18s ease,box-shadow .18s ease}
+.brand:hover{transform:translate(-1px,-1px) rotate(-1.5deg);box-shadow:3px 3px 0 rgba(20,16,42,.82)}
+.brand img{display:block;width:100%;height:auto;filter:drop-shadow(0 3px 0 rgba(20,16,42,.22)) contrast(1.08) saturate(1.08)}
+.brand::before,.brand::after{content:"";position:absolute;inset:0;pointer-events:none}
+.brand::before{background:linear-gradient(90deg,transparent 0 14%,rgba(255,255,255,.38) 16%,transparent 18% 80%,rgba(255,255,255,.18) 82%,transparent 100%);mix-blend-mode:screen;transform:translateX(-20%);animation:brandSweep 2.8s linear infinite}
+.brand::after{background:linear-gradient(180deg,rgba(255,255,255,.18),transparent 25%,rgba(255,255,255,.18) 60%,transparent 100%);mix-blend-mode:screen;animation:brandFlicker 1.8s steps(2,end) infinite}
+@keyframes brandSweep{0%{transform:translateX(-32%)}100%{transform:translateX(38%)}}
+@keyframes brandFlicker{0%,100%{opacity:0;transform:translate3d(0,0,0)}8%{opacity:.38;transform:translate3d(-2px,1px,0)}12%{opacity:0;transform:translate3d(2px,-2px,0)}19%{opacity:.28;transform:translate3d(2px,0,0)}28%{opacity:0;transform:translate3d(-2px,0,0)}46%{opacity:.18;transform:translate3d(0,0,0)}54%{opacity:0}76%{opacity:.32;transform:translate3d(1px,-1px,0)}79%{opacity:0}}
+.brand:focus-visible{outline-color:var(--ink);outline-offset:4px}
+.nav{display:flex;gap:10px;align-items:center}
+.nav a{font-family:var(--f-display);font-size:1.3rem;letter-spacing:.04em;line-height:1.2;text-decoration:none;color:var(--ink);background:#fff;border:3px solid var(--ink);padding:2px 14px 4px;box-shadow:3px 3px 0 var(--ink);transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,color .16s ease}
+.nav a:hover{background:var(--pink)}
+.nav a.nav-war-poll,.nav a.nav-fan-sign-in{animation:navReady .55s cubic-bezier(.2,1.5,.4,1) both}
+.nav a.nav-fan-sign-in{animation-delay:.12s}
+.nav a.nav-war-poll:hover,.nav a.nav-war-poll:focus-visible{background:var(--blue);color:#fff;transform:translateY(-3px) rotate(-2deg);box-shadow:5px 6px 0 var(--ink)}
+.nav a.nav-fan-sign-in:hover,.nav a.nav-fan-sign-in:focus-visible{background:var(--red);color:#fff;transform:translateY(-3px) rotate(2deg);box-shadow:5px 6px 0 var(--ink)}
+@keyframes navReady{from{opacity:0;transform:translateY(-10px) scale(.9)}to{opacity:1;transform:none}}
+.music-toggle{font-family:var(--f-display);font-size:1.5rem;letter-spacing:.04em;line-height:1;background:var(--ink);color:#fff;border:3px solid var(--ink);width:42px;height:42px;padding:0;box-shadow:3px 3px 0 rgba(20,16,42,.75);transition:transform .08s,box-shadow .08s}
+.music-toggle:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 rgba(20,16,42,.75)}
+.music-toggle[aria-pressed="true"]{background:var(--sun);color:var(--ink);animation:musicPulse .9s ease-in-out infinite alternate}
+@keyframes musicPulse{to{transform:translateY(-2px) rotate(4deg);box-shadow:5px 5px 0 rgba(20,16,42,.75)}}
+
+/* ============ Hero ============ */
+.hero{position:relative;overflow:hidden;background:repeating-conic-gradient(from 0deg at 70% 48%,var(--sun) 0 4deg,var(--sun-deep) 4deg 8deg);border-bottom:var(--border);padding:60px 20px 76px}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(20,16,42,.2) 20%,transparent 22%);background-size:16px 16px;-webkit-mask-image:linear-gradient(100deg,#000 0%,transparent 58%);mask-image:linear-gradient(100deg,#000 0%,transparent 58%)}
+.hero-in{position:relative;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
+.hero h1{font-size:clamp(3.4rem,10.5vw,7.4rem);line-height:.9;color:#fff;-webkit-text-stroke:10px var(--ink);paint-order:stroke fill;text-shadow:8px 8px 0 var(--red);transform:rotate(-2.5deg);transform-origin:left bottom;margin-bottom:30px;letter-spacing:.02em}
+.intro{background:#fff;border:var(--border);box-shadow:var(--shadow);padding:18px 20px;max-width:34rem;font-size:1.08rem;font-weight:500;transform:rotate(.6deg)}
+.cta{display:flex;flex-wrap:wrap;gap:16px;margin-top:30px}
+
+/* The comic page (right side of the hero) */
+.page{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px;background:#fff;padding:14px;border:var(--border);box-shadow:10px 10px 0 var(--ink);transform:rotate(1.5deg);overflow:hidden}
+.page-frame{position:relative;grid-column:1/-1;width:100%;aspect-ratio:2/3;overflow:hidden;border:var(--border);background:var(--ink);container-type:inline-size}
+.page-art{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .38s ease}
+.page-art.is-visible{opacity:1}
+.ability-effects{position:absolute;inset:0;z-index:4;overflow:hidden;pointer-events:none}
+.ability-effect{position:absolute;left:var(--effect-x,50%);top:var(--effect-y,50%);width:82px;height:120px;opacity:0;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg));transform-origin:center;filter:drop-shadow(0 0 8px rgba(255,255,255,.9))}
+.ability-effect svg{display:block;width:100%;height:100%;overflow:visible}
+.ability-effect.is-active{animation:effectFlash .72s ease-out both}
+.ability-effect-lightning{width:72px;height:148px}
+.ability-effect-repulse{width:90px;height:90px}
+.ability-effect-web{width:130px;height:100px}
+.ability-effect-lightning.is-active svg{animation:lightningPulse .22s steps(2,end) 2}
+.ability-effect-repulse.is-active svg{transform-origin:center;animation:repulseCore .3s ease-in-out 2}
+.ability-effect-web.is-active path{stroke-dasharray:1;animation:webDraw .6s ease-out both}
+@keyframes effectFlash{
+  0%{opacity:0;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg)) scale(.42)}
+  14%{opacity:1;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg)) scale(1.08)}
+  28%{opacity:.92;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg)) scale(.96)}
+  58%{opacity:.9;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg)) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) rotate(var(--effect-angle,0deg)) scale(.86)}
+}
+@keyframes lightningPulse{0%,100%{filter:drop-shadow(0 0 4px #fff)}50%{filter:drop-shadow(0 0 14px #80eaff)}}
+@keyframes repulseCore{0%,100%{transform:scale(.78)}50%{transform:scale(1.12)}}
+@keyframes webDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.page-nav{position:absolute;z-index:8;top:12px;right:12px;display:flex;gap:8px}
+.page-arrow{width:36px;height:36px;border:3px solid var(--ink);background:var(--sun);box-shadow:3px 3px 0 var(--ink);font-family:var(--f-display);font-size:1.5rem;line-height:1;padding:0;display:grid;place-items:center;transition:transform .12s,box-shadow .12s}
+.page-arrow:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 var(--ink)}
+.page-arrow:active{transform:translate(2px,2px);box-shadow:none}
+.page-arrow.is-reverse{background:var(--sky)}
+.panel{position:relative;overflow:hidden;border:var(--border);min-height:150px;animation:slam .55s cubic-bezier(.2,1.5,.4,1) both}
+.panel::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.28) 20%,transparent 22%);background-size:12px 12px}
+.panel.a{grid-column:1/-1;min-height:220px;background:var(--red);animation-delay:.1s}
+.panel.a::after{content:"";position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.2) 0 5deg,transparent 5deg 10deg)}
+.panel.b{background-color:var(--blue);background-image:linear-gradient(135deg,rgba(255,255,255,.16),rgba(0,0,0,.12)),url('assets/comic-panel-battle.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;animation-delay:.3s}
+.panel.c{background:var(--pink);animation-delay:.5s}
+.panel.b .bubble{background:rgba(255,255,255,.8);backdrop-filter:blur(1px)}
+.page.is-animating .panel,.page.is-animating .bubble,.page.is-animating .caption,.page.is-animating .bt{animation:comicFlash .45s ease}
+@keyframes slam{from{opacity:0;transform:scale(1.3) rotate(-4deg)}to{opacity:1;transform:none}}
+@keyframes comicFlash{0%{opacity:0;transform:translateY(10px) scale(.98)}45%{opacity:1;transform:translateY(-3px) scale(1.02)}100%{opacity:1;transform:none}}
+
+/* Starburst shapes, shared by hero, quiz feedback and results */
+.burst,.pop,.rank-burst{background:var(--ink);clip-path:var(--burst);display:grid;place-items:center}
+.burst::before,.pop::before,.rank-burst::before{content:"";position:absolute;inset:9px;background:var(--sun);clip-path:var(--burst)}
+.bt{position:relative;z-index:1;font-family:var(--f-display);font-weight:400;color:#fff;-webkit-text-stroke:7px var(--ink);paint-order:stroke fill;text-shadow:3px 3px 0 var(--red);letter-spacing:.04em;line-height:1}
+.burst{position:absolute;z-index:2;left:50%;top:50%;width:240px;height:240px;transform:translate(-50%,-50%) rotate(-8deg)}
+.burst .bt{font-size:4rem;transform:rotate(-4deg)}
+
+.bubble{position:absolute;z-index:2;left:14px;right:14px;top:16px;background:#fff;border:var(--border);border-radius:26px;padding:12px 14px;font-weight:700;font-size:1rem;line-height:1.25}
+.bubble::after{content:"";position:absolute;left:34px;bottom:-14px;width:22px;height:22px;background:#fff;border-right:4px solid var(--ink);border-bottom:4px solid var(--ink);transform:rotate(45deg)}
+.caption{position:absolute;z-index:2;left:12px;right:12px;bottom:12px;background:var(--sun);border:3px solid var(--ink);padding:8px 10px;font-size:.92rem;font-weight:700;line-height:1.3}
+
+/* ============ Sections ============ */
+h2.title{font-size:clamp(2.6rem,7vw,4.4rem);line-height:1}
+.lede{max-width:44rem;margin-top:16px;font-size:1.08rem;font-weight:500}
+
+/* Movies */
+.movies{background:var(--sky);background-image:radial-gradient(rgba(31,91,255,.2) 20%,transparent 22%);background-size:16px 16px;padding:68px 20px 88px;border-bottom:var(--border)}
+.controls{margin-top:30px;background:#fff;border:var(--border);box-shadow:var(--shadow);padding:18px;display:grid;gap:18px}
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-display);font-size:1.2rem;letter-spacing:.04em;line-height:1.2;background:#fff;border:3px solid var(--ink);padding:3px 13px 5px;box-shadow:3px 3px 0 var(--ink)}
+.chip i{width:14px;height:14px;border:2px solid var(--ink);background:var(--c,#fff);display:inline-block}
+.chip:hover{background:var(--sun)}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;box-shadow:none;transform:translate(3px,3px)}
+.chip[aria-pressed="true"] i{border-color:#fff}
+.tools{display:grid;grid-template-columns:1.4fr .8fr 1fr;gap:16px;align-items:end}
+.field{display:grid;gap:5px;font-weight:700;font-size:.9rem}
+.field input,.field select{font:inherit;font-weight:500;padding:10px 12px;border:3px solid var(--ink);background:#fff;color:var(--ink);min-height:46px;border-radius:0;width:100%}
+.progress{display:grid;gap:6px;font-weight:700;font-size:.9rem}
+.bar{height:20px;border:3px solid var(--ink);background:#fff}
+.bar>i{display:block;height:100%;width:0;background:var(--blue);transition:width .3s}
+
+.meta{margin-top:26px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between}
+.phase-note{background:var(--sun);border:3px solid var(--ink);padding:10px 14px;font-weight:500;max-width:46rem;box-shadow:4px 4px 0 var(--ink)}
+.phase-note strong{font-weight:700}
+.count{font-weight:700;background:#fff;border:3px solid var(--ink);padding:4px 12px}
+
+.grid{margin:30px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:34px 28px}
+.card{height:100%;display:flex;flex-direction:column;background:#fff;border:var(--border);box-shadow:var(--shadow)}
+.cover{position:relative;height:132px;background:var(--c);border-bottom:var(--border);overflow:hidden;padding:0 14px 8px;display:flex;align-items:flex-end}
+.cover::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(20,16,42,.26) 20%,transparent 22%);background-size:10px 10px}
+.cover::after{content:"";position:absolute;right:-34px;top:-30px;width:120px;height:220px;background:rgba(255,255,255,.22);transform:rotate(25deg)}
+.tags{position:absolute;z-index:2;left:12px;right:12px;top:10px;display:flex;flex-wrap:wrap;gap:8px}
+.tag{background:#fff;color:var(--ink);border:3px solid var(--ink);font-family:var(--f-display);font-size:1.05rem;letter-spacing:.04em;line-height:1.25;padding:0 8px 2px}
+.year{position:relative;z-index:1;font-family:var(--f-display);font-size:3.6rem;line-height:.9;color:#fff;-webkit-text-stroke:8px var(--ink);paint-order:stroke fill;letter-spacing:.03em}
+.soon{position:absolute;z-index:2;right:10px;bottom:12px;background:var(--sun);color:var(--ink);border:3px solid var(--ink);font-family:var(--f-display);font-size:1.15rem;letter-spacing:.04em;line-height:1.2;padding:0 10px 2px;transform:rotate(-6deg)}
+.body{padding:16px 16px 14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card h3{font-size:1.85rem;line-height:1.02}
+.by{font-size:.85rem;font-weight:500;color:var(--soft-ink)}
+.about{font-size:.95rem;display:-webkit-box;-webkit-line-clamp:4;line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.acts{margin-top:auto;padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.seen{display:inline-flex;align-items:center;gap:8px;background:#fff;border:3px solid var(--ink);padding:4px 11px;font-weight:700;font-size:.85rem;min-height:42px}
+.seen:hover{background:var(--sky)}
+.seen .box{width:20px;height:20px;border:3px solid var(--ink);background:#fff;display:grid;place-items:center;font-size:.85rem;line-height:1}
+.seen[aria-pressed="true"]{background:var(--good)}
+.seen[aria-pressed="true"] .box::after{content:"\2713"}
+.empty{grid-column:1/-1;background:#fff;border:var(--border);box-shadow:var(--shadow);padding:28px;text-align:center;display:grid;gap:14px;justify-items:center}
+.empty h3{font-size:2rem}
+
+/* Movie dialog */
+dialog{padding:0;border:var(--border);background:#fff;color:var(--ink);box-shadow:10px 10px 0 var(--ink);width:min(720px,calc(100vw - 28px));max-height:calc(100dvh - 28px);overflow:auto}
+dialog::backdrop{background:rgba(20,16,42,.74);background-image:radial-gradient(rgba(255,255,255,.12) 20%,transparent 22%);background-size:12px 12px}
+.d-cover{position:relative;background:var(--c);border-bottom:var(--border);padding:22px 70px 22px 24px;overflow:hidden}
+.d-cover::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(20,16,42,.26) 20%,transparent 22%);background-size:10px 10px}
+.d-tags{position:relative;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.d-cover .title{position:relative;font-size:clamp(2.2rem,7vw,3.6rem);line-height:.98;text-shadow:5px 5px 0 var(--ink)}
+.close{position:absolute;z-index:2;right:14px;top:14px;width:44px;height:44px;background:#fff;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);font-family:var(--f-display);font-size:1.8rem;line-height:1;display:grid;place-items:center;padding:0 0 4px}
+.close:hover{background:var(--pink)}
+.d-body{padding:22px 24px 26px;display:grid;gap:20px}
+.d-about{font-size:1.08rem;max-width:62ch}
+.facts{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.fact{border:3px solid var(--ink);padding:8px 12px;background:var(--sky)}
+.fact dt{font-family:var(--f-display);font-size:1.15rem;letter-spacing:.04em}
+.fact dd{margin:0;font-weight:500;font-size:.95rem}
+.d-body h4{font-size:1.5rem;margin-bottom:10px}
+.who{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:0}
+.who li{border:3px solid var(--ink);background:var(--sun);padding:2px 11px;font-weight:600;font-size:.9rem}
+
+/* Quiz */
+.quiz{background:var(--blue);background-image:radial-gradient(rgba(255,255,255,.22) 20%,transparent 22%);background-size:16px 16px;padding:68px 20px 96px;overflow:hidden;border-bottom:var(--border);text-align:center}
+.quiz .title{text-shadow:5px 5px 0 var(--red)}
+.quiz .lede{color:#fff;margin-left:auto;margin-right:auto;text-shadow:2px 2px 0 var(--ink)}
+.shell{margin:34px auto 0;max-width:880px;background:#fff;border:var(--border);box-shadow:10px 10px 0 var(--ink);padding:30px;text-align:left}
+.screen{position:relative}
+.screen:not([hidden]){animation:screenEnter .42s cubic-bezier(.2,1.2,.4,1) both}
+@keyframes screenEnter{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+.screen h3{font-size:2rem;margin-bottom:16px}
+.levels{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-bottom:22px}
+.level{position:relative;text-align:left;background:#fff;border:var(--border);box-shadow:5px 5px 0 var(--ink);padding:14px 16px 16px;display:grid;gap:4px;transition:transform .08s,box-shadow .08s}
+.level b{font-family:var(--f-display);font-weight:400;font-size:1.8rem;letter-spacing:.04em;line-height:1.1}
+.level span{font-size:.92rem}
+.level em{font-style:normal;font-size:.82rem;font-weight:700;color:var(--soft-ink)}
+.level:hover{background:var(--sky)}
+.level[aria-pressed="true"]{background:var(--sun);transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+.level[aria-pressed="true"]::after{content:"Selected";position:absolute;right:12px;top:12px;background:var(--ink);color:#fff;font-size:.75rem;font-weight:700;padding:1px 8px}
+.check{display:flex;align-items:center;gap:12px;font-weight:600;margin-bottom:10px}
+.check input{width:24px;height:24px;accent-color:var(--blue);flex:none}
+.note{font-size:.9rem;color:var(--soft-ink);margin-bottom:22px}
+
+.hud{display:flex;flex-wrap:wrap;gap:10px 14px;margin-bottom:14px}
+.hud p{border:3px solid var(--ink);background:var(--sky);padding:3px 12px;font-weight:600;font-size:.92rem}
+.hud b{font-family:var(--f-display);font-weight:400;font-size:1.25rem;letter-spacing:.04em}
+.timer{display:flex;align-items:center;gap:12px}
+.timer .bar{flex:1}
+.timer .bar>i{background:var(--blue);width:100%;transform-origin:left;transition:none}
+.timer.low .bar>i{background:var(--red)}
+.timer span{font-family:var(--f-display);font-size:1.5rem;min-width:3ch;letter-spacing:.04em}
+.qbox{background:var(--sun);border:var(--border);box-shadow:5px 5px 0 var(--ink);padding:16px 18px;margin:20px 0 22px}
+#qText{font-family:var(--f-body);font-size:clamp(1.15rem,3.4vw,1.5rem);font-weight:700;line-height:1.3;letter-spacing:0;margin:0}
+#qText:focus{outline:none}
+#qText.is-entering{animation:questionEnter .36s cubic-bezier(.2,1.25,.4,1) both}
+@keyframes questionEnter{from{opacity:0;transform:translateX(18px) rotate(-1deg)}to{opacity:1;transform:none}}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;border:var(--border);box-shadow:4px 4px 0 var(--ink);padding:12px 14px;font-weight:600;font-size:1.02rem;min-height:60px;transition:transform .08s,box-shadow .08s;animation:optionEnter .32s ease both;animation-delay:calc(var(--option-index,0)*55ms)}
+@keyframes optionEnter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.opt .k{flex:none;width:36px;height:36px;display:grid;place-items:center;font-family:var(--f-display);font-size:1.35rem;background:var(--ink);color:#fff}
+.opt .txt{flex:1}
+.opt .mark{flex:none;font-family:var(--f-display);font-size:1.6rem;line-height:1}
+.opt:hover:not([aria-disabled="true"]){background:var(--sky);transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.opt[aria-disabled="true"]{cursor:default}
+.opt.correct{background:var(--good);animation:answerPop .35s ease both}
+.opt.wrong{background:var(--bad);animation:answerShake .35s ease both}
+@keyframes answerPop{50%{transform:scale(1.035)}}
+@keyframes answerShake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.fb-in{margin-top:20px;border:var(--border);padding:14px 16px;background:var(--sky);display:grid;gap:4px;animation:feedbackEnter .3s ease both}
+@keyframes feedbackEnter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.verdict{font-family:var(--f-display);font-size:1.8rem;letter-spacing:.04em;line-height:1.1}
+.next-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:22px}
+
+.pop{position:absolute;z-index:5;right:-58px;top:-84px;width:150px;height:150px;pointer-events:none;opacity:0}
+.pop.bad::before{background:var(--pink)}
+.pop .bt{font-size:2.3rem;-webkit-text-stroke:6px var(--ink);transform:rotate(-6deg)}
+.pop.show{animation:pop .9s ease-out forwards}
+@keyframes pop{0%{opacity:0;transform:scale(.3) rotate(-24deg)}22%{opacity:1;transform:scale(1.12) rotate(-6deg)}70%{opacity:1;transform:scale(1) rotate(-6deg)}100%{opacity:0;transform:scale(1) rotate(-6deg)}}
+
+.done-top{display:flex;flex-wrap:wrap;align-items:center;gap:26px;margin-bottom:24px}
+.rank-burst{position:relative;width:190px;height:190px;flex:none;transform:rotate(-6deg)}
+.done-top .rank-burst{animation:rankLand .7s cubic-bezier(.15,1.5,.4,1) both}
+@keyframes rankLand{from{opacity:0;transform:rotate(-20deg) scale(.45)}to{opacity:1;transform:rotate(-6deg) scale(1)}}
+.rank-burst .bt{font-size:3.4rem;-webkit-text-stroke:8px var(--ink)}
+.done-top h3{font-size:2.6rem;margin-bottom:8px}
+.done-top p{max-width:34rem}
+#rStats{margin-top:8px;font-weight:600}
+.missed h4{font-size:1.6rem;margin-bottom:10px}
+.missed ul{padding:0;margin:0;list-style:none;display:grid;gap:10px}
+.missed li{border:3px solid var(--ink);background:var(--sky);padding:10px 14px;font-size:.95rem}
+.missed li b{display:block;margin-top:2px}
+
+/* Community polls */
+.community{background:var(--pink);background-image:radial-gradient(rgba(255,255,255,.28) 20%,transparent 22%);background-size:16px 16px;padding:68px 20px 84px;border-bottom:var(--border)}
+.fan-sign-in{background:var(--sun);padding:48px 20px;border-bottom:var(--border);scroll-margin-top:92px}
+.fan-sign-in .community-card{max-width:760px;margin:0 auto}
+.fan-sign-in .community-card.is-in-view,.poll-card.is-in-view{animation:communityCardEnter .5s cubic-bezier(.2,1.2,.4,1) both}
+.community,.fan-sign-in{scroll-margin-top:92px}
+@keyframes communityCardEnter{from{opacity:0;transform:translateY(18px) rotate(-1deg) scale(.98)}to{opacity:1;transform:none}}
+.community .lede{max-width:54rem}
+.community-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;margin-top:32px;align-items:start}
+.community-main{display:grid;grid-template-columns:minmax(260px,.72fr) minmax(0,1.28fr);gap:24px;align-items:start}
+.community-main.is-signed-out{grid-template-columns:1fr}
+.community-card{background:#fff;border:var(--border);box-shadow:8px 8px 0 var(--ink);padding:22px}
+.community-card h3{font-size:1.8rem;margin-bottom:14px}
+.community-form{display:grid;gap:14px}
+.community-form label{display:grid;gap:6px;font-weight:700}
+.community-form input,.community-form textarea{width:100%;font:inherit;border:3px solid var(--ink);padding:10px 12px;background:#fff;color:var(--ink)}
+.community-form input:focus-visible,.community-form textarea:focus-visible{outline-offset:2px}
+.community-form input:focus-visible,.community-form textarea:focus-visible{animation:inputFocus .25s ease both}
+@keyframes inputFocus{50%{box-shadow:0 0 0 5px rgba(31,91,255,.2)}}
+.community-form textarea{min-height:92px;resize:vertical}
+.community-help,.community-status{font-size:.9rem}
+.community-status{min-height:1.5em;font-weight:700}
+.community-account{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.poll-option-fields{display:grid;gap:10px}
+.poll-fieldset{border:0;padding:0;margin:0}
+.poll-fieldset legend{font-weight:700;margin-bottom:6px}
+.poll-option-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;animation:pollOptionEnter .3s ease both}
+@keyframes pollOptionEnter{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.poll-remove{width:44px;height:44px;background:#fff;border:3px solid var(--ink);font-size:1.25rem}
+.poll-media-note{font-size:.82rem;color:var(--soft-ink)}
+.poll-list{display:grid;gap:18px}
+.poll-list h3{font-size:2rem}
+.poll-card{background:#fff;border:var(--border);box-shadow:5px 5px 0 var(--ink);padding:18px}
+.poll-card h4{font-family:var(--f-body);font-size:1.2rem;line-height:1.35;letter-spacing:0;margin-bottom:12px}
+.poll-author{margin:-5px 0 10px;font-size:.85rem;font-weight:700;color:var(--soft-ink)}
+.poll-media{display:block;width:100%;max-height:420px;object-fit:contain;background:var(--ink);margin:0 0 14px}
+.poll-choice-list{display:grid;gap:9px}
+.poll-choice{position:relative;isolation:isolate;overflow:hidden;width:100%;min-height:48px;text-align:left;background:#fff;border:3px solid var(--ink);padding:9px 12px;font:inherit;font-weight:700}
+.poll-choice::before{content:"";position:absolute;z-index:-1;inset:0 auto 0 0;width:var(--poll-percent,0%);background:var(--sky)}
+.poll-choice:hover:not(:disabled){background-color:var(--sun);transform:translateY(-2px);box-shadow:3px 4px 0 var(--ink)}
+.poll-choice:active:not(:disabled){transform:translate(2px,2px);box-shadow:none}
+.poll-choice:disabled{cursor:default}
+.poll-choice.is-selected{outline:3px solid var(--blue);outline-offset:1px}
+.poll-choice-label{display:flex;justify-content:space-between;gap:12px}
+.poll-meta{margin-top:12px;font-size:.82rem;color:var(--soft-ink)}
+.poll-empty{background:#fff;border:3px dashed var(--ink);padding:18px}
+
+/* Footer */
+footer{background:var(--ink);color:#fff;padding:36px 20px 44px}
+footer .wrap{display:grid;gap:10px;font-size:.9rem;max-width:760px;margin:0 auto;text-align:center}
+footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;letter-spacing:.05em;color:var(--sun)}
+
+/* ============ Responsive ============ */
+@media (max-width:900px){
+  .hero{padding:44px 16px 64px}
+  .hero-in{grid-template-columns:1fr;gap:48px}
+  .page{max-width:520px}
+  .tools{grid-template-columns:1fr 1fr}
+  .progress{grid-column:1/-1}
+  .top-in{gap:10px;padding-left:16px;padding-right:16px}
+  .brand{width:clamp(150px,22vw,260px);min-width:150px}
+  .nav{gap:6px}
+  .nav a{font-size:1.1rem;padding-left:9px;padding-right:9px;white-space:nowrap}
+}
+@media (max-width:640px){
+  .opts{grid-template-columns:1fr}
+  .levels{grid-template-columns:1fr}
+  .shell{padding:18px}
+  .pop{right:-10px;top:-50px;width:112px;height:112px}
+  .pop .bt{font-size:1.8rem}
+  .tools{grid-template-columns:1fr}
+  .community-main{grid-template-columns:1fr}
+  .movies,.quiz{padding-left:16px;padding-right:16px}
+}
+@media (max-width:520px){
+  .top-in{padding:8px 12px;gap:8px;flex-wrap:wrap}
+  .brand{width:clamp(140px,38vw,220px);min-width:140px}
+  .nav{gap:6px}
+  .nav a{font-size:1rem;padding:2px 8px 3px;box-shadow:2px 2px 0 var(--ink)}
+  .burst{width:200px;height:200px}
+  .burst .bt{font-size:3.2rem}
+  .d-cover{padding:18px 64px 18px 18px}
+  .d-body{padding:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .panel{opacity:1}
+  .ability-effects{display:none}
+  .nav a.nav-war-poll,.nav a.nav-fan-sign-in,.fan-sign-in .community-card,.poll-card{animation:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#movies">Skip to the movies</a>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#top" aria-label="MarvelVault home"><img src="assets/marvel-logo.png" alt="Marvel logo"></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#movies">Movies</a>
+      <a href="#quiz">Quiz</a>
+      <a class="nav-war-poll" href="#war-polls">War Poll</a>
+      <a class="nav-fan-sign-in" href="#fan-sign-in">Sign in</a>
+      <button type="button" class="music-toggle" id="musicToggle" aria-label="Play music" aria-pressed="false" title="Play a 25-second music clip">♫</button>
+      <span class="sr" id="musicStatus" aria-live="polite"></span>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ================= HERO ================= -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <div class="hero-in">
+      <div>
+        <h1 id="heroTitle">MarvelVault</h1>
+        <p class="intro">Browse every Marvel Cinematic Universe movie, from Iron Man in 2008 to the next Avengers film. Read what each one is about, then test yourself in a 10-question quiz.</p>
+        <div class="cta">
+          <a class="btn" href="#movies">Browse the movies</a>
+          <a class="btn alt" href="#quiz">Start the quiz</a>
+        </div>
+      </div>
+
+      <div class="page" aria-label="Comic art carousel" data-scene="0">
+        <div class="page-nav" aria-label="Comic page controls">
+          <button type="button" class="page-arrow is-reverse" data-page="prev" aria-label="Previous comic page">←</button>
+          <button type="button" class="page-arrow" data-page="next" aria-label="Next comic page">→</button>
+        </div>
+        <div class="page-frame">
+          <img class="page-art is-visible" id="pageArt" src="assets/comic-page-spider-man.jpg" alt="Spider-Man comic panels">
+          <img class="page-art" id="pageArtNext" alt="" aria-hidden="true">
+          <div class="ability-effects" id="abilityEffects" aria-hidden="true">
+            <span class="ability-effect ability-effect-lightning" data-effect="lightning">
+              <svg viewBox="0 0 72 148">
+                <path d="M41 3 14 76h22l-8 69 34-87H40z" fill="#FFF36B" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+                <path d="M41 3 14 76h22l-8 69 34-87H40z" fill="none" stroke="#31BFFF" stroke-width="3" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="ability-effect ability-effect-repulse" data-effect="repulse">
+              <svg viewBox="0 0 90 90">
+                <g fill="none" stroke="#fff" stroke-linecap="round">
+                  <path d="M45 3v16M45 71v16M3 45h16M71 45h16M15 15l12 12m36 36 12 12M75 15 63 27M27 63 15 75" stroke-width="5"/>
+                  <circle cx="45" cy="45" r="26" stroke="#FFB347" stroke-width="5"/>
+                  <circle cx="45" cy="45" r="17" fill="#FFB347" fill-opacity=".8" stroke="#fff" stroke-width="4"/>
+                  <circle cx="45" cy="45" r="8" fill="#fff" stroke="#C8F7FF" stroke-width="3"/>
+                </g>
+              </svg>
+            </span>
+            <span class="ability-effect ability-effect-web" data-effect="web">
+              <svg viewBox="0 0 130 100">
+                <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <path pathLength="1" d="M4 96 126 4M20 82l3-30 28 19m-9-40 29 7-10 28m14-43 3 30-28-19m54 7-29-3 10-28M36 72l29-45m-7 60 28-45"/>
+                  <path pathLength="1" d="M4 96 126 4" stroke="#59D8FF" stroke-width="1.5"/>
+                </g>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MOVIES ================= -->
+  <section class="movies" id="movies" aria-labelledby="moviesTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="title" id="moviesTitle">All the movies</h2>
+        <p class="lede">The number on each card is the release order. The color shows which phase the movie belongs to. Open a card for the full story summary, then mark the ones you have seen.</p>
+      </div>
+
+      <div class="controls">
+        <div class="chips" id="chips" role="group" aria-label="Filter by phase"></div>
+        <div class="tools">
+          <label class="field">Search movies, directors or characters
+            <input type="search" id="search" placeholder="Try Thor, Coogler or Groot" autocomplete="off">
+          </label>
+          <label class="field">Sort by
+            <select id="sort">
+              <option value="release">Release order</option>
+              <option value="newest">Newest first</option>
+              <option value="az">Title A to Z</option>
+            </select>
+          </label>
+          <div class="progress">
+            <span id="progressText">You have seen 0 of 38 released movies</span>
+            <div class="bar" id="progressBar" role="progressbar" aria-label="Movies seen" aria-valuemin="0" aria-valuemax="38" aria-valuenow="0"><i id="progressFill"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="meta">
+        <p class="phase-note" id="phaseNote"></p>
+        <p class="count" id="count" aria-live="polite"></p>
+      </div>
+
+      <ul class="grid" id="grid"></ul>
+    </div>
+  </section>
+
+  <!-- ================= FAN SIGN IN ================= -->
+  <section class="fan-sign-in" id="fan-sign-in" aria-labelledby="fanSignInTitle">
+    <div class="wrap">
+      <div class="community-card">
+        <h2 class="title" id="fanSignInTitle">Join the fan community</h2>
+        <p class="community-help">Each account gets a random fan nickname. Every 20th member unlocks a randomly selected Avengers hero name.</p>
+        <div id="communityAuth">
+          <h3 id="communityAuthTitle">Sign in to join in</h3>
+          <form class="community-form" id="communityAuthForm">
+            <label>Email
+              <input type="email" id="communityEmail" autocomplete="email" required>
+            </label>
+            <label>Password
+              <input type="password" id="communityPassword" autocomplete="current-password" minlength="8" required>
+            </label>
+            <button type="submit" class="btn small" id="communityAuthSubmit">Sign in</button>
+            <button type="button" class="btn small alt" id="communityAuthSwitch">Create an account</button>
+            <p class="community-status" id="communityAuthStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+        <div id="communityAccount" hidden>
+          <h3 id="fanAccountTitle">You’re signed in as a fan</h3>
+          <div class="community-account">
+            <span id="communityUser"></span>
+            <button type="button" class="btn small alt" id="communitySignOut">Sign out</button>
+          </div>
+          <p class="community-status" id="communityAccountStatus" role="status" aria-live="polite"></p>
+        </div>
+        <p class="community-help" id="communitySetupHelp" hidden>Community accounts are not connected yet. Add your Supabase project settings to <code>assets/community-config.js</code> and follow the setup steps in README.md.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COMMUNITY POLLS ================= -->
+  <section class="community" id="war-polls" aria-labelledby="communityTitle">
+    <div class="wrap">
+      <h2 class="title" id="communityTitle">Marvel fan polls</h2>
+      <p class="lede">Sign in to create a poll or vote. Ask a question and add an optional image or video for other fans to see.</p>
+      <div class="community-grid">
+        <div class="community-main">
+          <div class="community-card" id="pollComposer" hidden>
+            <h3>Create a poll</h3>
+            <form class="community-form" id="pollForm">
+              <label>Your question
+                <textarea id="pollQuestion" maxlength="200" required placeholder="Which hero would you want on your team?"></textarea>
+              </label>
+              <fieldset class="community-form poll-fieldset">
+                <legend>Answer options (2–6)</legend>
+                <div class="poll-option-fields" id="pollOptionFields"></div>
+                <button type="button" class="btn small alt" id="addPollOption">Add an answer</button>
+              </fieldset>
+              <label>Optional image or video
+                <input type="file" id="pollMedia" accept="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm,video/quicktime">
+              </label>
+              <p class="poll-media-note">Uploads are publicly viewable with the poll. Images up to 10 MB and videos up to 50 MB.</p>
+              <button type="submit" class="btn small" id="createPollButton">Post poll</button>
+              <p class="community-status" id="pollCreateStatus" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+
+          <div class="poll-list" aria-labelledby="pollListTitle">
+            <h3 id="pollListTitle">Latest polls</h3>
+            <p class="community-status" id="pollListStatus" role="status" aria-live="polite"></p>
+            <div id="communityPolls" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= QUIZ ================= -->
+  <section class="quiz" id="quiz" aria-labelledby="quizTitle">
+    <div class="wrap">
+      <h2 class="title" id="quizTitle">Test your Marvel knowledge</h2>
+      <p class="lede">Ten questions per round. Quick answers earn bonus points, and a streak of right answers adds even more.</p>
+
+      <div class="shell">
+        <!-- Setup -->
+        <div class="screen" id="qSetup">
+          <h3 id="setupTitle" tabindex="-1">Choose your level</h3>
+          <div class="levels" id="levels" role="group" aria-label="Quiz level"></div>
+          <label class="check"><input type="checkbox" id="timerToggle" checked> Add a 20-second timer to each question</label>
+          <p class="note">Heads up: questions and answers can spoil movie plots. Tip: press 1 to 4 on your keyboard to answer.</p>
+          <button type="button" class="btn" id="startBtn">Start the quiz</button>
+        </div>
+
+        <!-- Play -->
+        <div class="screen" id="qPlay" hidden>
+          <div class="hud">
+            <p>Question <b id="qNum">1</b> of <b id="qTotal">10</b></p>
+            <p>Score <b id="qScore">0</b></p>
+            <p>Streak <b id="qStreak">0</b></p>
+          </div>
+          <div class="timer" id="timer">
+            <div class="bar"><i id="timerFill"></i></div>
+            <span id="timerText">20s</span>
+          </div>
+          <div class="qbox"><h3 id="qText" tabindex="-1"></h3></div>
+          <div class="opts" id="opts"></div>
+          <div id="feedback" aria-live="polite"></div>
+          <div class="next-row"><button type="button" class="btn" id="nextBtn" hidden>Next question</button></div>
+          <div class="pop" id="pop" aria-hidden="true"><span class="bt" id="popText">POW!</span></div>
+        </div>
+
+        <!-- Results -->
+        <div class="screen" id="qDone" hidden>
+          <div class="done-top">
+            <div class="rank-burst" aria-hidden="true"><span class="bt" id="rBurst">0/10</span></div>
+            <div>
+              <h3 id="rRank" tabindex="-1"></h3>
+              <p id="rLine"></p>
+              <p id="rStats"></p>
+            </div>
+          </div>
+          <div class="missed" id="missed"></div>
+          <div class="next-row">
+            <button type="button" class="btn" id="againBtn">Play again</button>
+            <button type="button" class="btn alt" id="levelBtn">Change level</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <strong>MarvelVault</strong>
+    <p>An unofficial fan project made for fun. Marvel, the Marvel Cinematic Universe and all related character and film names belong to Marvel and Disney. This site is not affiliated with or endorsed by them.</p>
+    <p>Dates are US release dates. Plans for upcoming films can change, so check official sources for the latest news.</p>
+  </div>
+</footer>
+
+<!-- Movie details dialog -->
+<dialog id="dlg" aria-labelledby="dTitle">
+  <div class="d-cover">
+    <button type="button" class="close" id="dClose" aria-label="Close details">&times;</button>
+    <div class="d-tags" id="dTags"></div>
+    <h3 class="title" id="dTitle"></h3>
+  </div>
+  <div class="d-body">
+    <p class="d-about" id="dAbout"></p>
+    <dl class="facts" id="dFacts"></dl>
+    <div>
+      <h4>Key heroes and villains</h4>
+      <ul class="who" id="dWho"></ul>
+    </div>
+    <div class="acts">
+      <button type="button" class="btn small alt" id="dDone">Close</button>
+      <button type="button" class="seen" id="dSeen" aria-pressed="false"><span class="box" aria-hidden="true"></span>Seen it</button>
+    </div>
+  </div>
+</dialog>
+
+<noscript><p style="background:#fff;color:#14102A;padding:16px;text-align:center">This site needs JavaScript to show the movie list and the quiz.</p></noscript>
+
+<script src="assets/community-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(() => {
+'use strict';
+
+/* ============ Helpers ============ */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+const supabaseConfig = window.MARVEL_SUPABASE_CONFIG || {};
+let communityClient = null;
+let communityClientError = '';
+try {
+  if (window.supabase && supabaseConfig.url && supabaseConfig.anonKey) {
+    communityClient = window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey);
+  }
+} catch (error) {
+  communityClientError = `Community setup error: ${error.message}`;
+}
+if (!communityClient && !communityClientError && supabaseConfig.url && supabaseConfig.anonKey) {
+  communityClientError = 'The community service library did not load. Check your connection and reload the page.';
+}
+const store = {
+  get(k, fallback) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } }
+};
+const fmtDate = iso => new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+/* ============ Community polls ============ */
+const communityAuthForm = $('#communityAuthForm');
+const communityAuthStatus = $('#communityAuthStatus');
+const pollCreateStatus = $('#pollCreateStatus');
+const pollListStatus = $('#pollListStatus');
+const communityPolls = $('#communityPolls');
+const pollOptionFields = $('#pollOptionFields');
+const communityMotionObserver = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  && 'IntersectionObserver' in window
+  ? new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add('is-in-view');
+        communityMotionObserver.unobserve(entry.target);
+      }
+    }, { threshold: 0.15 })
+  : null;
+let communitySession = null;
+let profileRequestId = 0;
+let communityAuthMode = 'signin';
+const pollBucket = 'community-poll-media';
+const acceptedMedia = {
+  'image/jpeg': { kind: 'image', ext: 'jpg', limit: 10 * 1024 * 1024 },
+  'image/png': { kind: 'image', ext: 'png', limit: 10 * 1024 * 1024 },
+  'image/gif': { kind: 'image', ext: 'gif', limit: 10 * 1024 * 1024 },
+  'image/webp': { kind: 'image', ext: 'webp', limit: 10 * 1024 * 1024 },
+  'video/mp4': { kind: 'video', ext: 'mp4', limit: 50 * 1024 * 1024 },
+  'video/webm': { kind: 'video', ext: 'webm', limit: 50 * 1024 * 1024 },
+  'video/quicktime': { kind: 'video', ext: 'mov', limit: 50 * 1024 * 1024 }
+};
+
+function setCommunityStatus(element, message) {
+  if (element) element.textContent = message;
+}
+
+function watchCommunityMotion(root = document) {
+  if (!communityMotionObserver) return;
+  $$('.fan-sign-in .community-card:not(.is-in-view), .poll-card:not(.is-in-view)', root)
+    .forEach(element => communityMotionObserver.observe(element));
+}
+
+watchCommunityMotion();
+
+function appendPollOption(value = '') {
+  if (pollOptionFields.children.length >= 6) return;
+  const row = document.createElement('div');
+  row.className = 'poll-option-row';
+  row.innerHTML = `<label>Answer ${pollOptionFields.children.length + 1}<input name="pollOption" maxlength="80" required value="${esc(value)}" placeholder="Type an answer"></label><button type="button" class="poll-remove" aria-label="Remove this answer" title="Remove this answer">×</button>`;
+  pollOptionFields.append(row);
+  refreshPollOptionLabels();
+}
+
+function refreshPollOptionLabels() {
+  const rows = [...pollOptionFields.children];
+  rows.forEach((row, index) => {
+    $('label', row).childNodes[0].textContent = `Answer ${index + 1}`;
+    $('.poll-remove', row).disabled = rows.length <= 2;
+  });
+  $('#addPollOption').disabled = rows.length >= 6;
+}
+
+function updateCommunityAccount(session) {
+  communitySession = session;
+  const requestId = ++profileRequestId;
+  const signedIn = Boolean(session?.user);
+  setCommunityStatus($('#communityAccountStatus'), '');
+  $('#communityAuth').hidden = signedIn || !communityClient;
+  $('#communityAccount').hidden = !signedIn;
+  $('#pollComposer').hidden = !signedIn;
+  $('.community-main').classList.toggle('is-signed-out', !signedIn);
+  $('#communitySetupHelp').hidden = Boolean(communityClient);
+  if (signedIn) {
+    $('#communityUser').textContent = 'Finding your fan nickname…';
+    window.setTimeout(() => loadCommunityProfile(session.user.id, requestId), 0);
+  } else {
+    $('#fanAccountTitle').textContent = 'You’re signed in as a fan';
+  }
+}
+
+async function loadCommunityProfile(userId, requestId) {
+  try {
+    const { data, error } = await communityClient
+      .from('community_profiles')
+      .select('nickname, is_avenger')
+      .eq('user_id', userId)
+      .single();
+    if (requestId !== profileRequestId) return;
+    if (error) {
+      $('#communityUser').textContent = 'Signed-in fan';
+      setCommunityStatus($('#communityAccountStatus'), `Could not load your fan nickname: ${error.message}`);
+      return;
+    }
+    $('#communityUser').textContent = data.nickname;
+    $('#fanAccountTitle').textContent = data.is_avenger ? 'Avenger nickname unlocked!' : 'Your fan nickname';
+  } catch (error) {
+    if (requestId !== profileRequestId) return;
+    $('#communityUser').textContent = 'Signed-in fan';
+    setCommunityStatus($('#communityAccountStatus'), `Could not load your fan nickname: ${error.message}`);
+  }
+}
+
+function renderCommunityPolls(polls, results) {
+  const resultByPoll = new Map();
+  for (const result of results) {
+    if (!resultByPoll.has(result.poll_id)) resultByPoll.set(result.poll_id, []);
+    resultByPoll.get(result.poll_id).push(result);
+  }
+
+  if (!polls.length) {
+    communityPolls.innerHTML = '<p class="poll-empty">No polls yet. Sign in and be the first to ask the community!</p>';
+    return;
+  }
+
+  communityPolls.innerHTML = polls.map((poll, pollIndex) => {
+    const pollResults = resultByPoll.get(poll.id) || [];
+    const counts = new Map(pollResults.map(item => [Number(item.option_index), Number(item.vote_count)]));
+    const totalVotes = [...counts.values()].reduce((sum, count) => sum + count, 0);
+    const viewerOption = pollResults.length && pollResults[0].viewer_option_index !== null
+      ? Number(pollResults[0].viewer_option_index)
+      : null;
+    const mediaUrl = poll.media_path
+      ? communityClient.storage.from(pollBucket).getPublicUrl(poll.media_path).data.publicUrl
+      : '';
+    const media = mediaUrl && poll.media_type === 'video'
+      ? `<video class="poll-media" controls preload="metadata" src="${esc(mediaUrl)}"></video>`
+      : mediaUrl && poll.media_type === 'image'
+        ? `<img class="poll-media" src="${esc(mediaUrl)}" alt="Media attached to this poll" loading="lazy">`
+        : '';
+    const options = poll.options.map((option, index) => {
+      const count = counts.get(index) || 0;
+      const percent = totalVotes ? Math.round(count / totalVotes * 100) : 0;
+      const selected = viewerOption === index;
+      const disabled = !communitySession || viewerOption !== null;
+      return `<button type="button" class="poll-choice${selected ? ' is-selected' : ''}" data-poll-id="${esc(poll.id)}" data-option-index="${index}" style="--poll-percent:${percent}%" ${disabled ? 'disabled' : ''}><span class="poll-choice-label"><span>${esc(option)}</span><span>${count} · ${percent}%</span></span></button>`;
+    }).join('');
+    const date = new Date(poll.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    const author = poll.author_nickname ? `Posted by ${esc(poll.author_nickname)} · ` : '';
+    return `<article class="poll-card" style="--poll-index:${pollIndex}"><h4>${esc(poll.question)}</h4><p class="poll-author">${author}${esc(date)}</p>${media}<div class="poll-choice-list">${options}</div><p class="poll-meta">${totalVotes} ${totalVotes === 1 ? 'vote' : 'votes'}${!communitySession && viewerOption === null ? ' · Sign in to vote' : ''}</p></article>`;
+  }).join('');
+  watchCommunityMotion(communityPolls);
+}
+
+async function loadCommunityPolls() {
+  if (!communityClient) {
+    setCommunityStatus(pollListStatus, communityClientError || 'Polls will appear here after the community is connected.');
+    return;
+  }
+  setCommunityStatus(pollListStatus, 'Loading polls…');
+  try {
+    const { data: polls, error: pollError } = await communityClient
+      .from('community_polls')
+      .select('id, question, author_nickname, media_path, media_type, options, created_at')
+      .order('created_at', { ascending: false })
+      .limit(30);
+    if (pollError) {
+      setCommunityStatus(pollListStatus, `Could not load polls: ${pollError.message}`);
+      communityPolls.innerHTML = '';
+      return;
+    }
+    let results = [];
+    if (polls.length) {
+      const { data, error } = await communityClient.rpc('get_community_poll_results', {
+        p_poll_ids: polls.map(poll => poll.id)
+      });
+      if (error) {
+        setCommunityStatus(pollListStatus, `Could not load poll results: ${error.message}`);
+        communityPolls.innerHTML = '';
+        return;
+      }
+      results = data || [];
+    }
+    setCommunityStatus(pollListStatus, '');
+    renderCommunityPolls(polls, results);
+  } catch (error) {
+    setCommunityStatus(pollListStatus, `Could not reach the polls service: ${error.message}`);
+    communityPolls.innerHTML = '';
+  }
+}
+
+function updateAuthMode() {
+  const signingUp = communityAuthMode === 'signup';
+  $('#communityAuthTitle').textContent = signingUp ? 'Create your fan account' : 'Sign in to join in';
+  $('#communityAuthSubmit').textContent = signingUp ? 'Create account' : 'Sign in';
+  $('#communityAuthSwitch').textContent = signingUp ? 'I already have an account' : 'Create an account';
+  $('#communityPassword').autocomplete = signingUp ? 'new-password' : 'current-password';
+}
+
+$('#communityAuthSwitch').addEventListener('click', () => {
+  communityAuthMode = communityAuthMode === 'signin' ? 'signup' : 'signin';
+  setCommunityStatus(communityAuthStatus, '');
+  updateAuthMode();
+});
+
+communityAuthForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  if (!communityClient) return;
+  const email = $('#communityEmail').value.trim();
+  const password = $('#communityPassword').value;
+  const submit = $('#communityAuthSubmit');
+  submit.disabled = true;
+  setCommunityStatus(communityAuthStatus, communityAuthMode === 'signup' ? 'Creating your account…' : 'Signing in…');
+  try {
+    const result = communityAuthMode === 'signup'
+      ? await communityClient.auth.signUp({ email, password })
+      : await communityClient.auth.signInWithPassword({ email, password });
+    if (result.error) {
+      setCommunityStatus(communityAuthStatus, `Could not ${communityAuthMode === 'signup' ? 'create account' : 'sign in'}: ${result.error.message}`);
+      return;
+    }
+    if (communityAuthMode === 'signup' && !result.data.session) {
+      setCommunityStatus(communityAuthStatus, 'Check your email for a confirmation link, then sign in here.');
+      return;
+    }
+    setCommunityStatus(communityAuthStatus, '');
+    communityAuthForm.reset();
+  } catch (error) {
+    setCommunityStatus(communityAuthStatus, `Could not reach the sign-in service: ${error.message}`);
+  } finally {
+    submit.disabled = false;
+  }
+});
+
+$('#communitySignOut').addEventListener('click', async () => {
+  if (!communityClient) return;
+  try {
+    const { error } = await communityClient.auth.signOut();
+    if (error) setCommunityStatus($('#communityAccountStatus'), `Could not sign out: ${error.message}`);
+  } catch (error) {
+    setCommunityStatus($('#communityAccountStatus'), `Could not reach the sign-in service: ${error.message}`);
+  }
+});
+
+$('#addPollOption').addEventListener('click', () => appendPollOption());
+pollOptionFields.addEventListener('click', event => {
+  const remove = event.target.closest('.poll-remove');
+  if (!remove || pollOptionFields.children.length <= 2) return;
+  remove.closest('.poll-option-row').remove();
+  refreshPollOptionLabels();
+});
+
+$('#pollMedia').addEventListener('change', event => {
+  const file = event.target.files[0];
+  if (!file) return setCommunityStatus(pollCreateStatus, '');
+  const media = acceptedMedia[file.type];
+  if (!media) {
+    event.target.value = '';
+    setCommunityStatus(pollCreateStatus, 'Choose a JPEG, PNG, GIF, WebP image or MP4, WebM, QuickTime video.');
+  } else if (file.size > media.limit) {
+    event.target.value = '';
+    setCommunityStatus(pollCreateStatus, `That file is too large. The limit for ${media.kind}s is ${media.limit / 1024 / 1024} MB.`);
+  } else {
+    setCommunityStatus(pollCreateStatus, '');
+  }
+});
+
+$('#pollForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (!communityClient || !communitySession?.user) return;
+  const question = $('#pollQuestion').value.trim();
+  const options = $$('[name="pollOption"]', pollOptionFields).map(input => input.value.trim());
+  const normalizedOptions = options.map(option => option.toLocaleLowerCase());
+  if (question.length < 5 || options.some(option => !option)) {
+    setCommunityStatus(pollCreateStatus, 'Enter a question of at least 5 characters and fill in every answer.');
+    return;
+  }
+  if (new Set(normalizedOptions).size !== normalizedOptions.length) {
+    setCommunityStatus(pollCreateStatus, 'Each answer option must be different.');
+    return;
+  }
+  const file = $('#pollMedia').files[0];
+  const media = file ? acceptedMedia[file.type] : null;
+  if (file && (!media || file.size > media.limit)) {
+    setCommunityStatus(pollCreateStatus, 'Choose a supported image or video within the file size limit.');
+    return;
+  }
+
+  const submit = $('#createPollButton');
+  submit.disabled = true;
+  setCommunityStatus(pollCreateStatus, 'Posting your poll…');
+  let uploadedPath = null;
+  try {
+    if (file) {
+      uploadedPath = `${communitySession.user.id}/${crypto.randomUUID()}.${media.ext}`;
+      const { error } = await communityClient.storage.from(pollBucket).upload(uploadedPath, file, {
+        cacheControl: '3600',
+        contentType: file.type,
+        upsert: false
+      });
+      if (error) throw new Error(`Media upload failed: ${error.message}`);
+    }
+    const { error } = await communityClient.from('community_polls').insert({
+      question,
+      options,
+      created_by: communitySession.user.id,
+      media_path: uploadedPath,
+      media_type: media?.kind || null
+    });
+    if (error) {
+      if (uploadedPath) {
+        const { error: cleanupError } = await communityClient.storage.from(pollBucket).remove([uploadedPath]);
+        if (cleanupError) throw new Error(`Poll could not be posted: ${error.message}. Uploaded media cleanup failed: ${cleanupError.message}`);
+      }
+      throw new Error(`Poll could not be posted: ${error.message}`);
+    }
+    $('#pollForm').reset();
+    pollOptionFields.innerHTML = '';
+    appendPollOption();
+    appendPollOption();
+    setCommunityStatus(pollCreateStatus, 'Your poll is live!');
+    await loadCommunityPolls();
+  } catch (error) {
+    setCommunityStatus(pollCreateStatus, error.message);
+  } finally {
+    submit.disabled = false;
+  }
+});
+
+communityPolls.addEventListener('click', async event => {
+  const button = event.target.closest('.poll-choice');
+  if (!button) return;
+  if (!communitySession?.user) {
+    setCommunityStatus(communityAuthStatus, 'Sign in to vote in this poll.');
+    $('#fan-sign-in').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    $('#communityEmail').focus({ preventScroll: true });
+    return;
+  }
+  const optionIndex = Number(button.dataset.optionIndex);
+  if (!Number.isInteger(optionIndex)) return;
+  button.disabled = true;
+  try {
+    const { error } = await communityClient.from('community_poll_votes').insert({
+      poll_id: button.dataset.pollId,
+      user_id: communitySession.user.id,
+      option_index: optionIndex
+    });
+    if (error) {
+      setCommunityStatus(pollListStatus, `Your vote was not saved: ${error.message}`);
+      button.disabled = false;
+      return;
+    }
+    setCommunityStatus(pollListStatus, 'Vote counted!');
+    await loadCommunityPolls();
+  } catch (error) {
+    setCommunityStatus(pollListStatus, `Could not reach the voting service: ${error.message}`);
+    button.disabled = false;
+  }
+});
+
+if (communityClient) {
+  updateCommunityAccount(null);
+  pollOptionFields.replaceChildren();
+  appendPollOption();
+  appendPollOption();
+  updateAuthMode();
+  communityClient.auth.onAuthStateChange((_event, session) => {
+    updateCommunityAccount(session);
+    loadCommunityPolls();
+  });
+  communityClient.auth.getSession()
+    .then(({ data, error }) => {
+      if (error) {
+        setCommunityStatus(communityAuthStatus, `Could not restore your sign-in: ${error.message}`);
+        return;
+      }
+      updateCommunityAccount(data.session);
+      loadCommunityPolls();
+    })
+    .catch(error => setCommunityStatus(communityAuthStatus, `Could not restore your sign-in: ${error.message}`));
+} else {
+  updateCommunityAccount(null);
+  setCommunityStatus(communityAuthStatus, communityClientError || '');
+  setCommunityStatus(pollListStatus, communityClientError || 'Connect a Supabase project to enable shared polls and sign-in.');
+  if (!communityClientError) $('#communitySetupHelp').hidden = false;
+}
+
+/* Starburst polygon used for comic "POW" shapes */
+function star(n, outer, inner) {
+  const pts = [];
+  for (let i = 0; i < n * 2; i++) {
+    const a = Math.PI * i / n - Math.PI / 2;
+    const r = i % 2 ? inner : outer;
+    pts.push(`${(50 + Math.cos(a) * r).toFixed(1)}% ${(50 + Math.sin(a) * r).toFixed(1)}%`);
+  }
+  return `polygon(${pts.join(',')})`;
+}
+document.documentElement.style.setProperty('--burst', star(14, 50, 37));
+
+const comicPages = [
+  { src: 'assets/comic-page-spider-man.jpg', alt: 'Spider-Man comic panels' },
+  { src: 'assets/comic-page-avengers.jpg', alt: 'Avengers comic panel with armored heroes' },
+  { src: 'assets/comic-page-battle.jpg', alt: 'Comic-book superhero battle panels' },
+  { src: 'assets/comic-page-iron-man-doom.jpg', alt: 'Iron Man facing Doctor Doom on a comic cover' },
+  { src: 'assets/comic-page-secret-wars.jpg', alt: 'Marvel Super Heroes Secret Wars activity-book cover' }
+];
+
+const comicPage = document.querySelector('.page');
+const pageArt = document.getElementById('pageArt');
+const pageArtNext = document.getElementById('pageArtNext');
+const effectLayer = document.getElementById('abilityEffects');
+const effects = [...document.querySelectorAll('.ability-effect')];
+const effectNames = ['lightning', 'repulse', 'web'];
+let comicImageLoadId = 0;
+let effectTimer = null;
+let lastEffect = '';
+
+function fireAbilityEffect() {
+  if (!effectLayer || !effects.length || document.hidden) return;
+  const availableEffects = effectNames.filter(name => name !== lastEffect);
+  const effectName = availableEffects[Math.floor(Math.random() * availableEffects.length)];
+  const effect = effects.find(item => item.dataset.effect === effectName);
+  if (!effect) return;
+
+  const edge = ['top', 'right', 'bottom', 'left'][Math.floor(Math.random() * 4)];
+  const offset = 14 + Math.random() * 72;
+  const positions = {
+    top: { x: `${offset}%`, y: '5%', angle: '0deg' },
+    right: { x: '95%', y: `${offset}%`, angle: '90deg' },
+    bottom: { x: `${offset}%`, y: '95%', angle: '180deg' },
+    left: { x: '5%', y: `${offset}%`, angle: '-90deg' }
+  };
+  const position = positions[edge];
+
+  effect.style.setProperty('--effect-x', position.x);
+  effect.style.setProperty('--effect-y', position.y);
+  effect.style.setProperty('--effect-angle', position.angle);
+  effect.classList.remove('is-active');
+  void effect.offsetWidth;
+  effect.classList.add('is-active');
+  lastEffect = effectName;
+
+  const clearEffect = event => {
+    if (event.target !== effect || event.animationName !== 'effectFlash') return;
+    effect.classList.remove('is-active');
+    effect.removeEventListener('animationend', clearEffect);
+  };
+  effect.addEventListener('animationend', clearEffect);
+}
+
+function scheduleAbilityEffect() {
+  clearTimeout(effectTimer);
+  if (document.hidden || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  effectTimer = window.setTimeout(() => {
+    fireAbilityEffect();
+    scheduleAbilityEffect();
+  }, 1800 + Math.random() * 2600);
+}
+
+scheduleAbilityEffect();
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) clearTimeout(effectTimer);
+  else scheduleAbilityEffect();
+});
+window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', scheduleAbilityEffect);
+
+function setComicScene(dir) {
+  if (!comicPage || !pageArt || !pageArtNext) return;
+  const current = Number(comicPage.dataset.scene || 0);
+  const next = (current + dir + comicPages.length) % comicPages.length;
+  comicPage.dataset.scene = String(next);
+
+  const outgoing = pageArt.classList.contains('is-visible') ? pageArt : pageArtNext;
+  const incoming = outgoing === pageArt ? pageArtNext : pageArt;
+  const loadId = ++comicImageLoadId;
+  incoming.onload = () => {
+    if (loadId !== comicImageLoadId) return;
+    incoming.alt = comicPages[next].alt;
+    incoming.removeAttribute('aria-hidden');
+    outgoing.alt = '';
+    outgoing.setAttribute('aria-hidden', 'true');
+    incoming.classList.add('is-visible');
+    outgoing.classList.remove('is-visible');
+  };
+  incoming.onerror = () => {
+    if (loadId === comicImageLoadId) comicPage.dataset.scene = String(current);
+  };
+  incoming.src = comicPages[next].src;
+  if (incoming.complete && incoming.naturalWidth) incoming.onload();
+}
+
+comicPage.addEventListener('click', e => {
+  const dirBtn = e.target.closest('[data-page]');
+  if (!dirBtn) return;
+  setComicScene(dirBtn.dataset.page === 'next' ? 1 : -1);
+});
+
+comicPage.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') { setComicScene(1); }
+  if (e.key === 'ArrowLeft') { setComicScene(-1); }
+});
+
+/* ============ Data: phases ============ */
+const PHASES = {
+  1: { c: '#E8262D', saga: 'Infinity Saga',   years: '2008 to 2012',   note: 'The team is built. Six films introduce the heroes and finish with the first big team-up.' },
+  2: { c: '#1F5BFF', saga: 'Infinity Saga',   years: '2013 to 2015',   note: 'The heroes deal with the fallout of that team-up while bigger threats appear in space and at home.' },
+  3: { c: '#E0258F', saga: 'Infinity Saga',   years: '2016 to 2019',   note: 'The team splits, new heroes arrive, and the story builds to its biggest showdown with Thanos.' },
+  4: { c: '#00A28F', saga: 'Multiverse Saga', years: '2021 to 2022',   note: 'A fresh start with new heroes and the first real look at other universes.' },
+  5: { c: '#FF7A00', saga: 'Multiverse Saga', years: '2023 to 2025',   note: 'Multiverse threats grow while old heroes pass the torch and new teams form.' },
+  6: { c: '#7A3FE0', saga: 'Multiverse Saga', years: '2025 and beyond', note: 'The road to the next big Avengers crossovers.' }
+};
+
+/* ============ Data: movies (in release order) ============ */
+const MOVIES = [
+  { t: "Iron Man", y: 2008, d: "2008-05-02", p: 1, dir: "Jon Favreau",
+    who: ["Tony Stark", "Pepper Potts", "Rhodey", "Obadiah Stane"],
+    about: "Billionaire weapons maker Tony Stark is captured overseas and builds a flying armored suit to escape. Back home, he decides to use that technology to protect people instead of selling weapons." },
+  { t: "The Incredible Hulk", y: 2008, d: "2008-06-13", p: 1, dir: "Louis Leterrier",
+    who: ["Bruce Banner", "Betty Ross", "General Ross", "Emil Blonsky"],
+    about: "Scientist Bruce Banner is on the run, searching for a cure for the gamma accident that turns him into a giant green powerhouse. The military is closing in, and one soldier wants that kind of strength for himself." },
+  { t: "Iron Man 2", y: 2010, d: "2010-05-07", p: 1, dir: "Jon Favreau",
+    who: ["Tony Stark", "Black Widow", "War Machine", "Nick Fury", "Ivan Vanko"],
+    about: "Everyone knows Tony Stark is Iron Man, and the government wants his suit. A rival inventor and a hidden problem inside his own power source make things even harder." },
+  { t: "Thor", y: 2011, d: "2011-05-06", p: 1, dir: "Kenneth Branagh",
+    who: ["Thor", "Loki", "Odin", "Jane Foster"],
+    about: "The proud prince of Asgard is stripped of his power and sent to Earth. He has to learn humility while his scheming brother Loki threatens the throne back home." },
+  { t: "Captain America: The First Avenger", y: 2011, d: "2011-07-22", p: 1, dir: "Joe Johnston",
+    who: ["Steve Rogers", "Bucky Barnes", "Peggy Carter", "Red Skull"],
+    about: "Skinny but brave Steve Rogers volunteers for a wartime experiment that turns him into a super-soldier. In World War II he takes on HYDRA, a secret science group with dangerous weapons." },
+  { t: "The Avengers", y: 2012, d: "2012-05-04", p: 1, dir: "Joss Whedon",
+    who: ["Iron Man", "Captain America", "Thor", "Hulk", "Black Widow", "Hawkeye", "Loki"],
+    about: "Loki arrives with an alien army and a powerful cube. Nick Fury brings together Iron Man, Captain America, Thor, Hulk, Black Widow and Hawkeye to defend New York." },
+  { t: "Iron Man 3", y: 2013, d: "2013-05-03", p: 2, dir: "Shane Black",
+    who: ["Tony Stark", "Pepper Potts", "Rhodey", "Aldrich Killian", "The Mandarin"],
+    about: "Still shaken after the battle of New York, Tony Stark is hunted by a terrorist called the Mandarin. He has to fight back with his wits and a few gadgets." },
+  { t: "Thor: The Dark World", y: 2013, d: "2013-11-08", p: 2, dir: "Alan Taylor",
+    who: ["Thor", "Jane Foster", "Loki", "Malekith"],
+    about: "An ancient race of Dark Elves wakes up and goes after a force that could plunge the universe into darkness. Thor must team up with an unlikely ally to protect the Nine Realms." },
+  { t: "Captain America: The Winter Soldier", y: 2014, d: "2014-04-04", p: 2, dir: "Anthony and Joe Russo",
+    who: ["Steve Rogers", "Black Widow", "Falcon", "Nick Fury", "Winter Soldier"],
+    about: "Steve Rogers is still getting used to the modern world when a conspiracy inside S.H.I.E.L.D. and a mysterious masked assassin turn the spy world upside down." },
+  { t: "Guardians of the Galaxy", y: 2014, d: "2014-08-01", p: 2, dir: "James Gunn",
+    who: ["Star-Lord", "Gamora", "Drax", "Rocket", "Groot", "Ronan"],
+    about: "Space outlaw Peter Quill steals a mysterious orb and ends up leading a team of misfits: a fierce assassin, a muscle-bound warrior, a talking raccoon and a walking tree. Together they try to stop a fanatic who wants the orb's power." },
+  { t: "Avengers: Age of Ultron", y: 2015, d: "2015-05-01", p: 2, dir: "Joss Whedon",
+    who: ["Iron Man", "Captain America", "Thor", "Hulk", "Ultron", "Scarlet Witch", "Vision"],
+    about: "Tony Stark and Bruce Banner try to build a global peacekeeping program, but it goes wrong. An AI called Ultron decides the best way to protect Earth is to wipe out humanity." },
+  { t: "Ant-Man", y: 2015, d: "2015-07-17", p: 2, dir: "Peyton Reed",
+    who: ["Scott Lang", "Hank Pym", "Hope van Dyne", "Darren Cross"],
+    about: "Ex-thief Scott Lang is recruited by scientist Hank Pym to wear a suit that shrinks him to the size of an insect. His first job is a heist to keep dangerous technology out of the wrong hands." },
+  { t: "Captain America: Civil War", y: 2016, d: "2016-05-06", p: 3, dir: "Anthony and Joe Russo",
+    who: ["Captain America", "Iron Man", "Black Panther", "Spider-Man", "Winter Soldier", "Zemo"],
+    about: "After a mission ends with civilian casualties, the world wants oversight of the Avengers. The team splits into two sides, one led by Steve Rogers and the other by Tony Stark." },
+  { t: "Doctor Strange", y: 2016, d: "2016-11-04", p: 3, dir: "Scott Derrickson",
+    who: ["Stephen Strange", "The Ancient One", "Mordo", "Wong", "Kaecilius"],
+    about: "A brilliant but arrogant surgeon loses the use of his hands in a car crash and travels to Nepal. There he discovers magic and a secret war between sorcerers and a dark force." },
+  { t: "Guardians of the Galaxy Vol. 2", y: 2017, d: "2017-05-05", p: 3, dir: "James Gunn",
+    who: ["Star-Lord", "Gamora", "Drax", "Rocket", "Baby Groot", "Nebula", "Yondu", "Ego"],
+    about: "The Guardians are chased across the galaxy while Peter Quill finally meets the father he never knew. His offer turns out to be more complicated than it first seems." },
+  { t: "Spider-Man: Homecoming", y: 2017, d: "2017-07-07", p: 3, dir: "Jon Watts",
+    who: ["Peter Parker", "Tony Stark", "Ned Leeds", "Vulture"],
+    about: "Fifteen-year-old Peter Parker wants to prove to Tony Stark that he is ready to be a real hero. He has to balance high school life with taking on a villain who flies using stolen alien tech." },
+  { t: "Thor: Ragnarok", y: 2017, d: "2017-11-03", p: 3, dir: "Taika Waititi",
+    who: ["Thor", "Hulk", "Loki", "Valkyrie", "Hela", "Grandmaster", "Korg"],
+    about: "Thor is stranded on the junk planet Sakaar and forced to fight in a gladiator arena against an old teammate, while his long-lost sister threatens to destroy Asgard." },
+  { t: "Black Panther", y: 2018, d: "2018-02-16", p: 3, dir: "Ryan Coogler",
+    who: ["T'Challa", "Shuri", "Okoye", "Nakia", "Killmonger"],
+    about: "T'Challa returns home to Wakanda to become king. An enemy from the nation's past challenges both his rule and the secrets his country has kept hidden from the world." },
+  { t: "Avengers: Infinity War", y: 2018, d: "2018-04-27", p: 3, dir: "Anthony and Joe Russo",
+    who: ["Iron Man", "Thor", "Doctor Strange", "Spider-Man", "Black Panther", "Star-Lord", "Thanos"],
+    about: "Thanos wants to collect all six Infinity Stones. The Avengers, the Guardians of the Galaxy and the heroes of Wakanda all join the fight to stop him." },
+  { t: "Ant-Man and the Wasp", y: 2018, d: "2018-07-06", p: 3, dir: "Peyton Reed",
+    who: ["Ant-Man", "The Wasp", "Hank Pym", "Janet van Dyne", "Ghost"],
+    about: "Scott Lang is under house arrest when Hank Pym and Hope van Dyne pull him back into action. They need his help on a mission into the quantum realm, and a mysterious foe called Ghost wants the same tech." },
+  { t: "Captain Marvel", y: 2019, d: "2019-03-08", p: 3, dir: "Anna Boden and Ryan Fleck",
+    who: ["Carol Danvers", "Nick Fury", "Yon-Rogg", "Talos", "Goose"],
+    about: "Carol Danvers is a Kree warrior who has lost her memory. After crash-landing on Earth in the 1990s, she starts to piece together her past while a war between two alien empires closes in." },
+  { t: "Avengers: Endgame", y: 2019, d: "2019-04-26", p: 3, dir: "Anthony and Joe Russo",
+    who: ["Iron Man", "Captain America", "Thor", "Hulk", "Black Widow", "Hawkeye", "Ant-Man", "Captain Marvel"],
+    about: "After Thanos's devastating victory, the surviving heroes make one last, desperate plan to undo the damage and set things right." },
+  { t: "Spider-Man: Far From Home", y: 2019, d: "2019-07-02", p: 3, dir: "Jon Watts",
+    who: ["Peter Parker", "MJ", "Ned Leeds", "Nick Fury", "Mysterio"],
+    about: "Peter Parker goes on a school trip to Europe hoping for a break from heroics. Nick Fury has other plans, and a stranger says he comes from another Earth." },
+  { t: "Black Widow", y: 2021, d: "2021-07-09", p: 4, dir: "Cate Shortland",
+    who: ["Natasha Romanoff", "Yelena Belova", "Red Guardian", "Melina Vostokoff", "Taskmaster"],
+    about: "On the run after the events of Civil War, Natasha Romanoff must face the program that turned her into a spy. She also reunites with the family she once pretended to have." },
+  { t: "Shang-Chi and the Legend of the Ten Rings", y: 2021, d: "2021-09-03", p: 4, dir: "Destin Daniel Cretton",
+    who: ["Shang-Chi", "Katy", "Wenwu", "Xialing"],
+    about: "Shang-Chi is living a quiet life in San Francisco until his father, who commands ten magical rings, drags him back into the family business." },
+  { t: "Eternals", y: 2021, d: "2021-11-05", p: 4, dir: "Chloé Zhao",
+    who: ["Sersi", "Ikaris", "Thena", "Phastos", "Kingo", "Makkari"],
+    about: "A group of immortal beings who have secretly protected Earth for thousands of years reunite when a monstrous threat returns." },
+  { t: "Spider-Man: No Way Home", y: 2021, d: "2021-12-17", p: 4, dir: "Jon Watts",
+    who: ["Peter Parker", "Doctor Strange", "MJ", "Ned Leeds", "Green Goblin", "Doctor Octopus"],
+    about: "With his identity revealed to the world, Peter Parker asks Doctor Strange for help. A spell goes wrong and opens the door to dangerous visitors from other universes." },
+  { t: "Doctor Strange in the Multiverse of Madness", y: 2022, d: "2022-05-06", p: 4, dir: "Sam Raimi",
+    who: ["Stephen Strange", "America Chavez", "Wanda Maximoff", "Wong", "Christine Palmer"],
+    about: "Doctor Strange protects a teenager named America Chavez, who can travel between universes, from a dark force that wants her power." },
+  { t: "Thor: Love and Thunder", y: 2022, d: "2022-07-08", p: 4, dir: "Taika Waititi",
+    who: ["Thor", "Mighty Thor", "Valkyrie", "Korg", "Gorr", "Zeus"],
+    about: "Thor is searching for who he is when a god-slaying killer named Gorr begins to hunt the gods. He teams up with Valkyrie, Korg and his ex Jane Foster, who now wields Mjolnir." },
+  { t: "Black Panther: Wakanda Forever", y: 2022, d: "2022-11-11", p: 4, dir: "Ryan Coogler",
+    who: ["Shuri", "Queen Ramonda", "Okoye", "Nakia", "M'Baku", "Namor", "Riri Williams"],
+    about: "After the loss of King T'Challa, Wakanda faces pressure from world powers and a threat from a hidden underwater kingdom led by a powerful ruler named Namor." },
+  { t: "Ant-Man and the Wasp: Quantumania", y: 2023, d: "2023-02-17", p: 5, dir: "Peyton Reed",
+    who: ["Ant-Man", "The Wasp", "Cassie Lang", "Janet van Dyne", "Kang", "M.O.D.O.K."],
+    about: "Scott Lang, Hope, Hank, Janet and Cassie are pulled into the Quantum Realm, where a powerful conqueror has been waiting for them." },
+  { t: "Guardians of the Galaxy Vol. 3", y: 2023, d: "2023-05-05", p: 5, dir: "James Gunn",
+    who: ["Star-Lord", "Rocket", "Gamora", "Drax", "Mantis", "Nebula", "Groot", "Adam Warlock", "High Evolutionary"],
+    about: "The Guardians rally to protect one of their own, Rocket. As they dig into his painful past, they come face to face with the scientist responsible." },
+  { t: "The Marvels", y: 2023, d: "2023-11-10", p: 5, dir: "Nia DaCosta",
+    who: ["Captain Marvel", "Monica Rambeau", "Ms. Marvel", "Nick Fury", "Dar-Benn"],
+    about: "Carol Danvers, Monica Rambeau and Kamala Khan find their powers tangled together, and they swap places every time they use them. A Kree rebel is threatening their worlds." },
+  { t: "Deadpool & Wolverine", y: 2024, d: "2024-07-26", p: 5, dir: "Shawn Levy",
+    who: ["Deadpool", "Wolverine", "Paradox", "Cassandra Nova"],
+    about: "Deadpool is recruited by the Time Variance Authority and drags a reluctant Wolverine along on a mission to save his universe. Note: it is rated R, so it is made for adult audiences." },
+  { t: "Captain America: Brave New World", y: 2025, d: "2025-02-14", p: 5, dir: "Julius Onah",
+    who: ["Sam Wilson", "Joaquin Torres", "President Ross", "Isaiah Bradley", "Sabra"],
+    about: "Sam Wilson, the new Captain America, is pulled into an international incident that could split world powers apart and uncover a plot at the highest levels." },
+  { t: "Thunderbolts*", y: 2025, d: "2025-05-02", p: 5, dir: "Jake Schreier",
+    who: ["Yelena Belova", "Bucky Barnes", "Red Guardian", "Ghost", "John Walker", "Taskmaster"],
+    about: "A group of antiheroes and government castoffs find themselves trapped in a deadly situation and have to learn to work as a team." },
+  { t: "The Fantastic Four: First Steps", y: 2025, d: "2025-07-25", p: 6, dir: "Matt Shakman",
+    who: ["Reed Richards", "Sue Storm", "Johnny Storm", "Ben Grimm", "Silver Surfer", "Galactus"],
+    about: "In a retro-futuristic 1960s-style world, the Fantastic Four face their biggest test yet when the cosmic giant Galactus and his herald, the Silver Surfer, arrive." },
+  { t: "Spider-Man: Brand New Day", y: 2026, d: "2026-07-31", p: 6, dir: "Destin Daniel Cretton",
+    who: ["Peter Parker", "MJ"],
+    about: "Set years after the world forgot who Peter Parker is, he keeps protecting his city while the people closest to him no longer remember him." },
+  { t: "Avengers: Doomsday", y: 2026, d: "2026-12-18", p: 6, dir: "Anthony and Joe Russo",
+    who: ["Doctor Doom", "Avengers", "Fantastic Four", "X-Men", "Wakandans"],
+    about: "Many heroes, including the Avengers, the Wakandans, the Fantastic Four and the X-Men, are set to face Doctor Doom, played by Robert Downey Jr. The story is still under wraps, and release dates can change." }
+];
+
+const NOW = new Date();
+MOVIES.forEach((m, i) => { m.n = i + 1; m.up = new Date(m.d + 'T00:00:00') > NOW; });
+const RELEASED = MOVIES.filter(m => !m.up);
+
+/* ============ Movies UI ============ */
+const state = { phase: 'all', q: '', sort: 'release' };
+let seen = new Set(store.get('mmv-seen', []));
+
+$$('.filmCount').forEach(el => { el.textContent = MOVIES.length; });
+
+const chips = $('#chips');
+chips.innerHTML = `<button type="button" class="chip" data-phase="all" aria-pressed="true">All movies</button>` +
+  Object.entries(PHASES).map(([k, v]) => `<button type="button" class="chip" data-phase="${k}" aria-pressed="false" style="--c:${v.c}"><i></i>Phase ${k}</button>`).join('');
+
+chips.addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  state.phase = b.dataset.phase;
+  $$('.chip', chips).forEach(c => c.setAttribute('aria-pressed', String(c === b)));
+  renderMovies();
+});
+$('#search').addEventListener('input', e => { state.q = e.target.value; renderMovies(); });
+$('#sort').addEventListener('change', e => { state.sort = e.target.value; renderMovies(); });
+
+function cardHTML(m) {
+  const ph = PHASES[m.p];
+  const isSeen = seen.has(m.n);
+  return `<li><article class="card" style="--c:${ph.c}">
+    <div class="cover">
+      <div class="tags"><span class="tag" title="Release order">No. ${m.n}</span><span class="tag">Phase ${m.p}</span></div>
+      <span class="year">${m.y}</span>
+      ${m.up ? '<span class="soon">Coming soon</span>' : ''}
+    </div>
+    <div class="body">
+      <h3>${esc(m.t)}</h3>
+      <p class="by">Directed by ${esc(m.dir)}</p>
+      <p class="about">${esc(m.about)}</p>
+      <div class="acts">
+        <button type="button" class="btn small" data-open="${m.n}">Read more<span class="sr"> about ${esc(m.t)}</span></button>
+        ${m.up ? '' : `<button type="button" class="seen" data-seen="${m.n}" aria-pressed="${isSeen}"><span class="box" aria-hidden="true"></span>Seen it<span class="sr">: ${esc(m.t)}</span></button>`}
+      </div>
+    </div>
+  </article></li>`;
+}
+
+function renderProgress() {
+  const count = RELEASED.filter(m => seen.has(m.n)).length;
+  $('#progressText').textContent = `You have seen ${count} of ${RELEASED.length} released movies`;
+  $('#progressFill').style.width = (count / RELEASED.length * 100) + '%';
+  const bar = $('#progressBar');
+  bar.setAttribute('aria-valuemax', RELEASED.length);
+  bar.setAttribute('aria-valuenow', count);
+}
+
+function renderMovies() {
+  const q = state.q.trim().toLowerCase();
+  let list = MOVIES.filter(m =>
+    (state.phase === 'all' || m.p === Number(state.phase)) &&
+    (!q || `${m.t} ${m.dir} ${m.who.join(' ')} ${m.about}`.toLowerCase().includes(q))
+  );
+  if (state.sort === 'newest') list = [...list].reverse();
+  if (state.sort === 'az') list = [...list].sort((a, b) => a.t.localeCompare(b.t));
+
+  $('#grid').innerHTML = list.length
+    ? list.map(cardHTML).join('')
+    : `<li class="empty"><h3>No movies found</h3><p>Nothing matches that search in this phase. Clear the filters to see every movie again.</p><button type="button" class="btn small" id="clearFilters">Clear filters</button></li>`;
+
+  $('#count').textContent = `Showing ${list.length} of ${MOVIES.length} movies`;
+
+  if (state.phase === 'all') {
+    $('#phaseNote').innerHTML = `<strong>All six phases.</strong> Phases 1 to 3 make up the Infinity Saga. Phases 4 to 6 make up the Multiverse Saga.`;
+  } else {
+    const ph = PHASES[state.phase];
+    $('#phaseNote').innerHTML = `<strong>Phase ${state.phase}, ${esc(ph.saga)} (${esc(ph.years)}).</strong> ${esc(ph.note)}`;
+  }
+  renderProgress();
+}
+
+function toggleSeen(n) {
+  seen.has(n) ? seen.delete(n) : seen.add(n);
+  store.set('mmv-seen', [...seen]);
+}
+
+$('#grid').addEventListener('click', e => {
+  const open = e.target.closest('[data-open]');
+  if (open) { openMovie(Number(open.dataset.open)); return; }
+  const s = e.target.closest('[data-seen]');
+  if (s) {
+    const n = Number(s.dataset.seen);
+    toggleSeen(n);
+    s.setAttribute('aria-pressed', String(seen.has(n)));
+    renderProgress();
+    return;
+  }
+  if (e.target.closest('#clearFilters')) {
+    state.phase = 'all'; state.q = ''; $('#search').value = '';
+    $$('.chip', chips).forEach(c => c.setAttribute('aria-pressed', String(c.dataset.phase === 'all')));
+    renderMovies();
+  }
+});
+
+/* ---- Movie dialog ---- */
+const dlg = $('#dlg');
+function syncDialogSeen(m) {
+  const b = $('#dSeen');
+  b.hidden = m.up;
+  b.setAttribute('aria-pressed', String(seen.has(m.n)));
+}
+function openMovie(n) {
+  const m = MOVIES[n - 1], ph = PHASES[m.p];
+  dlg.dataset.n = n;
+  dlg.style.setProperty('--c', ph.c);
+  $('#dTags').innerHTML = `<span class="tag">No. ${m.n}</span><span class="tag">Phase ${m.p}</span>${m.up ? '<span class="tag">Coming soon</span>' : ''}`;
+  $('#dTitle').textContent = m.t;
+  $('#dAbout').textContent = m.about;
+  $('#dFacts').innerHTML =
+    `<div class="fact"><dt>${m.up ? 'Planned release' : 'Released'}</dt><dd>${fmtDate(m.d)}</dd></div>` +
+    `<div class="fact"><dt>Director</dt><dd>${esc(m.dir)}</dd></div>` +
+    `<div class="fact"><dt>Saga</dt><dd>${esc(ph.saga)}, Phase ${m.p}</dd></div>`;
+  $('#dWho').innerHTML = m.who.map(w => `<li>${esc(w)}</li>`).join('');
+  syncDialogSeen(m);
+  dlg.showModal();
+  dlg.scrollTop = 0;
+}
+$('#dClose').addEventListener('click', () => dlg.close());
+$('#dDone').addEventListener('click', () => dlg.close());
+$('#dSeen').addEventListener('click', () => {
+  const n = Number(dlg.dataset.n);
+  toggleSeen(n);
+  syncDialogSeen(MOVIES[n - 1]);
+  renderMovies();
+});
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+dlg.addEventListener('close', () => {
+  const b = $(`[data-open="${dlg.dataset.n}"]`);
+  if (b) b.focus();
+});
+
+renderMovies();
+
+const musicToggle = document.getElementById('musicToggle');
+const musicStatus = document.getElementById('musicStatus');
+const themeClip = new Audio('assets/avengers-theme-clip.mp3');
+themeClip.preload = 'none';
+themeClip.volume = 0.72;
+let musicTimeout = null;
+
+function stopThemeClip() {
+  clearTimeout(musicTimeout);
+  themeClip.pause();
+  themeClip.currentTime = 0;
+  musicToggle.setAttribute('aria-pressed', 'false');
+  musicToggle.setAttribute('aria-label', 'Play music');
+  musicStatus.textContent = 'Music stopped.';
+}
+
+function playThemeClip() {
+  clearTimeout(musicTimeout);
+  themeClip.pause();
+  themeClip.currentTime = 0;
+  musicToggle.setAttribute('aria-pressed', 'true');
+  musicToggle.setAttribute('aria-label', 'Stop music');
+  musicStatus.textContent = 'Playing music for up to 25 seconds.';
+  themeClip.play().catch(() => {
+    clearTimeout(musicTimeout);
+    musicStatus.textContent = 'The music could not be played. Check your connection and try again.';
+    musicToggle.setAttribute('aria-pressed', 'false');
+    musicToggle.setAttribute('aria-label', 'Play music');
+  });
+  musicTimeout = window.setTimeout(stopThemeClip, 25000);
+}
+
+musicToggle?.addEventListener('click', () => {
+  if (!themeClip.paused) stopThemeClip();
+  else playThemeClip();
+});
+themeClip.addEventListener('ended', () => {
+  clearTimeout(musicTimeout);
+  musicToggle?.setAttribute('aria-pressed', 'false');
+  musicToggle?.setAttribute('aria-label', 'Play music');
+  musicStatus.textContent = 'Music finished.';
+});
+
+/* ============ Quiz data ============ */
+/* o[0] is always the correct answer. Options are shuffled when a question is shown. */
+const QUESTIONS = [
+  /* ---- Easy ---- */
+  { l: 'easy', q: "Which film launched the Marvel Cinematic Universe in 2008?", o: ["Iron Man", "The Incredible Hulk", "Thor", "The Avengers"], f: "Iron Man arrived in May 2008 and started the shared universe." },
+  { l: 'easy', q: "What is the name of Thor's magic hammer?", o: ["Mjolnir", "Stormbreaker", "Gungnir", "Twilight Sword"], f: "Only someone worthy can lift Mjolnir. Thor uses it to fly and call down lightning." },
+  { l: 'easy', q: "What fictional metal is Captain America's shield made of?", o: ["Vibranium", "Adamantium", "Uru", "Titanium"], f: "Vibranium comes from Wakanda and absorbs impact." },
+  { l: 'easy', q: "What is the name of the hidden African nation that Black Panther rules?", o: ["Wakanda", "Genosha", "Latveria", "Sokovia"], f: "Wakanda hides its advanced technology behind the image of a poor country." },
+  { l: 'easy', q: "Who is the main villain of Avengers: Infinity War?", o: ["Thanos", "Loki", "Ultron", "Hela"], f: "Thanos wants to collect all six Infinity Stones." },
+  { l: 'easy', q: "What is the name of Tony Stark's AI assistant in the first Iron Man films?", o: ["J.A.R.V.I.S.", "F.R.I.D.A.Y.", "E.D.I.T.H.", "K.A.R.E.N."], f: "J.A.R.V.I.S. is voiced by Paul Bettany, who later plays Vision." },
+  { l: 'easy', q: "What is Black Widow's real name?", o: ["Natasha Romanoff", "Wanda Maximoff", "Carol Danvers", "Peggy Carter"], f: "Natasha Romanoff is played by Scarlett Johansson." },
+  { l: 'easy', q: "Who is Thor's mischievous adopted brother?", o: ["Loki", "Heimdall", "Korg", "Hogun"], f: "Loki is played by Tom Hiddleston and first appears in Thor (2011)." },
+  { l: 'easy', q: "What kind of animal is Rocket in Guardians of the Galaxy?", o: ["A raccoon", "A fox", "A cat", "A weasel"], f: "Rocket is a genetically modified raccoon who loves building weapons." },
+  { l: 'easy', q: "How many Infinity Stones are there?", o: ["Six", "Five", "Seven", "Four"], f: "They are the Space, Mind, Reality, Power, Time and Soul Stones." },
+  { l: 'easy', q: "Who plays Iron Man in the MCU?", o: ["Robert Downey Jr.", "Chris Evans", "Mark Ruffalo", "Jeremy Renner"], f: "Downey Jr. played Tony Stark from 2008 until Avengers: Endgame." },
+  { l: 'easy', q: "Which actor plays Thor?", o: ["Chris Hemsworth", "Tom Hiddleston", "Chris Pratt", "Paul Rudd"], f: "Hemsworth has played the god of thunder since 2011." },
+  { l: 'easy', q: "What is the name of Captain Marvel's pet cat, which is secretly an alien?", o: ["Goose", "Chewie", "Pumpkin", "Mittens"], f: "Goose is a Flerken, a creature that looks like a cat but is far more dangerous." },
+  { l: 'easy', q: "Which city is attacked by an alien army in The Avengers (2012)?", o: ["New York City", "Los Angeles", "Chicago", "Washington, D.C."], f: "The big finale is known as the Battle of New York." },
+  { l: 'easy', q: "What is Peter Parker's superhero identity?", o: ["Spider-Man", "Ant-Man", "Falcon", "Hawkeye"], f: "Peter Parker protects New York as the friendly neighborhood Spider-Man." },
+  { l: 'easy', q: "What is the name of Thor's home realm?", o: ["Asgard", "Midgard", "Sakaar", "Xandar"], f: "Thor is the Asgardian god of thunder." },
+  { l: 'easy', q: "What nickname does Peter Quill use?", o: ["Star-Lord", "Nova", "Captain Cosmic", "Ravager"], f: "Peter Quill introduces himself as Star-Lord, though not everyone is impressed." },
+  { l: 'easy', q: "What is the name of the organization Captain America fights in World War II?", o: ["HYDRA", "S.H.I.E.L.D.", "A.I.M.", "The Hand"], f: "HYDRA is the secret organization behind Red Skull's dangerous weapons." },
+  { l: 'easy', q: "What is Bruce Banner known as when the gamma-powered transformation takes over?", o: ["Hulk", "Abomination", "Red Hulk", "The Thing"], f: "The Hulk is the powerful green alter ego of scientist Bruce Banner." },
+  { l: 'easy', q: "What is the name of Tony Stark's longtime friend who becomes War Machine?", o: ["James Rhodes", "Happy Hogan", "Sam Wilson", "Clint Barton"], f: "James 'Rhodey' Rhodes pilots the armored War Machine suit." },
+
+  /* ---- Medium ---- */
+  { l: 'medium', q: "Which spy agency does Nick Fury lead?", o: ["S.H.I.E.L.D.", "HYDRA", "A.I.M.", "The Ravagers"], f: "Fury assembles the Avengers through S.H.I.E.L.D." },
+  { l: 'medium', q: "Which Infinity Stone is hidden inside the Tesseract?", o: ["The Space Stone", "The Time Stone", "The Reality Stone", "The Soul Stone"], f: "The Tesseract holds the Space Stone, which can open portals across the universe." },
+  { l: 'medium', q: "Who is the villain of the first Iron Man film (2008)?", o: ["Obadiah Stane", "Justin Hammer", "Aldrich Killian", "Ivan Vanko"], f: "Stane is Tony's business partner, played by Jeff Bridges." },
+  { l: 'medium', q: "What agreement splits the Avengers in Captain America: Civil War?", o: ["The Sokovia Accords", "The Avengers Treaty", "The Registration Act", "The Stark Protocol"], f: "The Accords would put the Avengers under United Nations oversight." },
+  { l: 'medium', q: "Who directed Thor: Ragnarok?", o: ["Taika Waititi", "Kenneth Branagh", "Alan Taylor", "James Gunn"], f: "Waititi also voices the rock giant Korg in the film." },
+  { l: 'medium', q: "Who is Peter Quill's father in Guardians of the Galaxy Vol. 2?", o: ["Ego", "Yondu", "Thanos", "Odin"], f: "Ego is a living planet, played by Kurt Russell." },
+  { l: 'medium', q: "Which hero's real name is Scott Lang?", o: ["Ant-Man", "Hawkeye", "Falcon", "Doctor Strange"], f: "Paul Rudd plays Ant-Man, a former thief turned shrinking hero." },
+  { l: 'medium', q: "Who is the main villain of Black Panther (2018)?", o: ["Killmonger", "Ulysses Klaue", "Namor", "M'Baku"], f: "Erik Killmonger challenges T'Challa for the throne of Wakanda." },
+  { l: 'medium', q: "Which Infinity Stone powers Vision's forehead gem?", o: ["The Mind Stone", "The Reality Stone", "The Power Stone", "The Time Stone"], f: "The Mind Stone was first hidden inside Loki's scepter." },
+  { l: 'medium', q: "Who built Ultron in Avengers: Age of Ultron?", o: ["Tony Stark and Bruce Banner", "Hank Pym and Bill Foster", "Howard Stark and Arnim Zola", "Helen Cho and Nick Fury"], f: "Stark and Banner used the Mind Stone to try to create a global peacekeeper." },
+  { l: 'medium', q: "Which Infinity Stone is kept inside the Eye of Agamotto?", o: ["The Time Stone", "The Soul Stone", "The Space Stone", "The Power Stone"], f: "Doctor Strange wears the Eye of Agamotto, which protects the Time Stone." },
+  { l: 'medium', q: "What was Stephen Strange's job before he became a sorcerer?", o: ["Neurosurgeon", "Cardiologist", "Architect", "Physicist"], f: "He was a gifted but arrogant neurosurgeon until a car crash ruined his hands." },
+  { l: 'medium', q: "Who is Wanda Maximoff's twin brother?", o: ["Pietro", "Vision", "Bucky", "Sam"], f: "Pietro, also known as Quicksilver, appears in Avengers: Age of Ultron." },
+  { l: 'medium', q: "In the first Guardians of the Galaxy film, what is Star-Lord's ship called?", o: ["The Milano", "The Benatar", "The Statesman", "The Quinjet"], f: "The Milano is named after an actress that Peter Quill had a crush on as a kid." },
+  { l: 'medium', q: "In Spider-Man: Far From Home, which villain fools the world with illusions?", o: ["Mysterio", "Vulture", "Electro", "Green Goblin"], f: "Quentin Beck is played by Jake Gyllenhaal." },
+  { l: 'medium', q: "What was Carol Danvers' job before she gained her powers?", o: ["Air Force pilot", "NASA engineer", "S.H.I.E.L.D. agent", "Navy pilot"], f: "She was a U.S. Air Force pilot in the 1990s." },
+  { l: 'medium', q: "Who directed the first Avengers film in 2012?", o: ["Joss Whedon", "Jon Favreau", "Anthony and Joe Russo", "James Gunn"], f: "Whedon also directed Avengers: Age of Ultron." },
+  { l: 'medium', q: "Which cosmic being threatens Earth in The Fantastic Four: First Steps?", o: ["Galactus", "Thanos", "Ego", "Knull"], f: "Galactus is a giant planet-devourer who arrives with a herald called the Silver Surfer." },
+  { l: 'medium', q: "Who carries Captain America's shield in Captain America: Brave New World?", o: ["Sam Wilson", "Bucky Barnes", "John Walker", "Isaiah Bradley"], f: "Sam Wilson took over the shield after Steve Rogers retired." },
+  { l: 'medium', q: "Which actor plays Yelena Belova?", o: ["Florence Pugh", "Scarlett Johansson", "Elizabeth Olsen", "Zendaya"], f: "Pugh debuted as Yelena in Black Widow (2021) and returned in Thunderbolts*." },
+
+  /* ---- Hard ---- */
+  { l: 'hard', q: "Which film's mid-credits scene first shows Thanos to audiences?", o: ["The Avengers", "Iron Man 3", "Avengers: Age of Ultron", "Thor: The Dark World"], f: "Thanos turns and smiles at the end of The Avengers (2012)." },
+  { l: 'hard', q: "What is the name of the axe Thor gets from the dwarf king Eitri in Avengers: Infinity War?", o: ["Stormbreaker", "Mjolnir", "Gungnir", "Twilight Sword"], f: "Stormbreaker was forged in the star-powered forge on Nidavellir." },
+  { l: 'hard', q: "Who is the Dark Elf villain of Thor: The Dark World?", o: ["Malekith", "Kurse", "Surtur", "Hela"], f: "Malekith wants to plunge the universe into darkness using a force called the Aether." },
+  { l: 'hard', q: "Which planet does Thor get stranded on in Thor: Ragnarok?", o: ["Sakaar", "Xandar", "Titan", "Vormir"], f: "Sakaar is a junk-filled world ruled by the Grandmaster." },
+  { l: 'hard', q: "Which film started Phase 4 of the MCU in theaters?", o: ["Black Widow", "Shang-Chi and the Legend of the Ten Rings", "Eternals", "Spider-Man: No Way Home"], f: "Black Widow arrived in July 2021 after a long delay." },
+  { l: 'hard', q: "What is the name of the secret program that trained Natasha Romanoff?", o: ["The Red Room", "The Raft", "The Vault", "The Hive"], f: "The Red Room trains young spies known as Widows." },
+  { l: 'hard', q: "Who directed Eternals?", o: ["Chloé Zhao", "Ryan Coogler", "Cate Shortland", "Nia DaCosta"], f: "Zhao won the Best Director Oscar for Nomadland before making Eternals." },
+  { l: 'hard', q: "In Guardians of the Galaxy (2014), which Infinity Stone is inside the Orb everyone chases?", o: ["The Power Stone", "The Soul Stone", "The Mind Stone", "The Reality Stone"], f: "Ronan and the Guardians fight over the Power Stone on Xandar." },
+  { l: 'hard', q: "Which villain becomes Yellowjacket in the first Ant-Man film?", o: ["Darren Cross", "Bill Foster", "Eric O'Grady", "Ava Starr"], f: "Cross was Hank Pym's former protégé." },
+  { l: 'hard', q: "Which planet holds the Soul Stone in Avengers: Infinity War?", o: ["Vormir", "Titan", "Knowhere", "Morag"], f: "Vormir is watched over by the Red Skull, who guards the stone." },
+  { l: 'hard', q: "Which of these films was NOT directed by the Russo brothers?", o: ["Avengers: Age of Ultron", "Captain America: The Winter Soldier", "Captain America: Civil War", "Avengers: Endgame"], f: "Joss Whedon directed Age of Ultron. The Russos made both Captain America sequels and the last two Avengers films." },
+  { l: 'hard', q: "What is the name of the all-female royal guard of Wakanda?", o: ["Dora Milaje", "Midnight Angels", "War Dogs", "Spear Sisters"], f: "The Dora Milaje serve as Wakanda's elite royal guard." },
+  { l: 'hard', q: "Which Celestial judges the Eternals and assigns their mission?", o: ["Arishem", "Tiamut", "Ego", "Knowhere"], f: "Arishem sends the Eternals to Earth and later judges their actions." },
+  { l: 'hard', q: "What is the name of the prison that holds super-powered inmates in Captain America: Civil War?", o: ["The Raft", "The Vault", "The Kyln", "The Red Room"], f: "The Raft is a high-security prison built to contain enhanced people." },
+  { l: 'hard', q: "What name does Bucky Barnes use while working as Hydra's assassin?", o: ["The Winter Soldier", "The Red Guardian", "The Other", "The Iron Patriot"], f: "Hydra turns Bucky into the Winter Soldier and repeatedly wipes his memory." },
+  { l: 'hard', q: "What is the name of the giant Celestial whose emergence threatens Earth in Eternals?", o: ["Tiamut", "Arishem", "Ego", "Knowhere"], f: "Tiamut begins to emerge from Earth before the Eternals stop the process." },
+  { l: 'hard', q: "What is the name of Ronan's flagship in Guardians of the Galaxy?", o: ["The Dark Aster", "The Sanctuary II", "The Milano", "The Benatar"], f: "Ronan commands the Dark Aster during his attack on Xandar." },
+  { l: 'hard', q: "Which Howling Commando is played by Neal McDonough?", o: ["Dum Dum Dugan", "Gabe Jones", "Jim Morita", "Jacques Dernier"], f: "Neal McDonough plays Dum Dum Dugan, the bowler-hat-wearing commando." },
+  { l: 'hard', q: "Which organization secretly infiltrates S.H.I.E.L.D. in Captain America: The Winter Soldier?", o: ["HYDRA", "A.I.M.", "The Hand", "The Ravagers"], f: "Hydra has spent decades hiding inside S.H.I.E.L.D. and preparing Project Insight." },
+  { l: 'hard', q: "What is the name of the celestial forge where Thor's Stormbreaker is made?", o: ["Nidavellir", "Knowhere", "Vormir", "Xandar"], f: "Eitri forges Stormbreaker at Nidavellir, powered by a neutron star." },
+  { l: 'hard', q: "What is the name of the ancient book of spells guarded by the sorcerers in Doctor Strange?", o: ["The Book of Cagliostro", "The Darkhold", "The Book of Vishanti", "The Tome of Agamotto"], f: "The Book of Cagliostro contains dangerous knowledge about manipulating time." }
+];
+
+const MODES = {
+  rookie: { name: 'Rookie', desc: 'Famous heroes, villains and the basics.', pick: q => q.l === 'easy' },
+  hero:   { name: 'Hero',   desc: 'Plots, Infinity Stones and directors.',  pick: q => q.l === 'medium' },
+  legend: { name: 'Legend', desc: 'Deep cuts for true superfans.',          pick: q => q.l === 'hard' },
+  mixed:  { name: 'Mixed',  desc: 'A bit of everything, from easy to hard.', pick: () => true }
+};
+const RANKS = [
+  [9, 'Cosmic know-it-all', 'You could write the next movie guide.'],
+  [7, 'Avengers-level fan', 'Strong run. One more rewatch and you will be perfect.'],
+  [5, 'Rising hero', 'A solid base. The movie guide above has the rest.'],
+  [3, 'Rookie sidekick', 'A good start. Read up on the movies and try again.'],
+  [0, 'Bystander in the crowd', 'Everyone starts somewhere. Read up, then try again.']
+];
+const QUIZ_LEN = 10, TIME_LIMIT = 20;
+
+/* ============ Quiz UI ============ */
+const screens = { setup: $('#qSetup'), play: $('#qPlay'), done: $('#qDone') };
+let mode = 'rookie', game = null, tick = null;
+let previousRoundQuestions = new Set();
+
+function showScreen(name) {
+  Object.entries(screens).forEach(([k, el]) => { el.hidden = k !== name; });
+}
+function bringIntoView() {
+  $('.shell').scrollIntoView({ block: 'start', behavior: 'auto' });
+}
+
+function renderLevels() {
+  const best = store.get('mmv-best', {});
+  $('#levels').innerHTML = Object.entries(MODES).map(([k, m]) => {
+    const b = best[k];
+    return `<button type="button" class="level" data-mode="${k}" aria-pressed="${k === mode}">
+      <b>${m.name}</b><span>${m.desc}</span>
+      <em>${b ? `Best: ${b.score.toLocaleString()} points (${b.correct}/${QUIZ_LEN})` : 'No score yet'}</em>
+    </button>`;
+  }).join('');
+}
+$('#levels').addEventListener('click', e => {
+  const b = e.target.closest('.level'); if (!b) return;
+  mode = b.dataset.mode;
+  $$('.level').forEach(l => l.setAttribute('aria-pressed', String(l === b)));
+});
+renderLevels();
+
+$('#startBtn').addEventListener('click', startGame);
+$('#againBtn').addEventListener('click', startGame);
+$('#levelBtn').addEventListener('click', () => {
+  showScreen('setup'); renderLevels(); bringIntoView(); $('#setupTitle').focus({ preventScroll: true });
+});
+
+function startGame() {
+  const pool = QUESTIONS.filter(MODES[mode].pick);
+  const unseen = pool.filter(q => !previousRoundQuestions.has(q.q));
+  const round = shuffle(unseen).slice(0, QUIZ_LEN);
+  if (round.length < Math.min(QUIZ_LEN, pool.length)) {
+    const roundQuestions = new Set(round.map(q => q.q));
+    const fill = shuffle(pool.filter(q => !roundQuestions.has(q.q)));
+    round.push(...fill.slice(0, QUIZ_LEN - round.length));
+  }
+  previousRoundQuestions = new Set(round.map(q => q.q));
+  const list = round.map(q => ({ ...q, options: shuffle(q.o) }));
+  game = { list, i: 0, score: 0, streak: 0, correct: 0, missed: [], answered: false, timerOn: $('#timerToggle').checked, t0: 0, paused: null };
+  $('#qTotal').textContent = list.length;
+  showScreen('play');
+  bringIntoView();
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = game.list[game.i];
+  game.answered = false;
+  $('#qNum').textContent = game.i + 1;
+  $('#qScore').textContent = game.score.toLocaleString();
+  $('#qStreak').textContent = game.streak;
+  $('#qText').textContent = q.q;
+  $('#qText').classList.remove('is-entering');
+  void $('#qText').offsetWidth;
+  $('#qText').classList.add('is-entering');
+  $('#opts').innerHTML = q.options.map((o, i) =>
+    `<button type="button" class="opt" data-i="${i}" style="--option-index:${i}"><span class="k" aria-hidden="true">${'ABCD'[i]}</span><span class="txt">${esc(o)}</span><span class="mark"></span></button>`
+  ).join('');
+  $('#feedback').innerHTML = '';
+  $('#nextBtn').hidden = true;
+  $('#pop').classList.remove('show', 'bad');
+  $('#timer').hidden = !game.timerOn;
+  if (game.timerOn) startTimer(0);
+  $('#qText').focus({ preventScroll: true });
+}
+
+$('#opts').addEventListener('click', e => {
+  const b = e.target.closest('.opt');
+  if (b) choose(Number(b.dataset.i));
+});
+document.addEventListener('keydown', e => {
+  if (!game || screens.play.hidden || game.answered || dlg.open) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
+  const k = e.key.toLowerCase();
+  let idx = '1234'.indexOf(k);
+  if (idx < 0) idx = 'abcd'.indexOf(k);
+  if (k.length === 1 && idx > -1) choose(idx);
+});
+
+function updateTimer() {
+  const left = Math.max(0, TIME_LIMIT - (Date.now() - game.t0) / 1000);
+  $('#timerFill').style.transform = `scaleX(${left / TIME_LIMIT})`;
+  $('#timerText').textContent = Math.ceil(left) + 's';
+  $('#timer').classList.toggle('low', left <= 5);
+  if (left <= 0) choose(-1, true);
+}
+function startTimer(elapsed) {
+  stopTimer();
+  game.t0 = Date.now() - elapsed * 1000;
+  tick = setInterval(updateTimer, 100);
+  updateTimer();
+}
+function stopTimer() { clearInterval(tick); tick = null; }
+
+/* Pause the timer while the tab is hidden */
+document.addEventListener('visibilitychange', () => {
+  if (!game || !game.timerOn || game.answered || screens.play.hidden) return;
+  if (document.hidden) { game.paused = (Date.now() - game.t0) / 1000; stopTimer(); }
+  else if (game.paused != null) { const e = game.paused; game.paused = null; startTimer(e); }
+});
+
+function choose(idx, timedOut = false) {
+  if (!game || game.answered) return;
+  game.answered = true;
+  stopTimer();
+
+  const q = game.list[game.i];
+  const correctIdx = q.options.indexOf(q.o[0]);
+  const ok = !timedOut && idx === correctIdx;
+  let gain = 0;
+
+  if (ok) {
+    game.streak++; game.correct++;
+    const left = game.timerOn ? Math.max(0, TIME_LIMIT - (Date.now() - game.t0) / 1000) : 0;
+    const speed = game.timerOn ? Math.round(left / TIME_LIMIT * 50) : 0;
+    const streakBonus = Math.min(50, (game.streak - 1) * 10);
+    gain = 100 + speed + streakBonus;
+    game.score += gain;
+  } else {
+    game.streak = 0;
+    game.missed.push({ q: q.q, a: q.o[0] });
+  }
+
+  $$('.opt').forEach((b, i) => {
+    b.setAttribute('aria-disabled', 'true');
+    const mark = $('.mark', b);
+    if (i === correctIdx) {
+      b.classList.add('correct');
+      mark.innerHTML = '<span aria-hidden="true">&#10003;</span><span class="sr">Correct answer</span>';
+    } else if (i === idx) {
+      b.classList.add('wrong');
+      mark.innerHTML = '<span aria-hidden="true">&#10005;</span><span class="sr">Your answer, incorrect</span>';
+    }
+  });
+
+  const verdict = ok ? `Correct! +${gain} points` : (timedOut ? "Time's up!" : 'Not quite.');
+  $('#feedback').innerHTML = `<div class="fb-in"><p class="verdict">${verdict}</p>${ok ? '' : `<p><b>The answer:</b> ${esc(q.o[0])}</p>`}<p>${esc(q.f)}</p></div>`;
+
+  const pop = $('#pop');
+  $('#popText').textContent = ok ? 'POW!' : (timedOut ? 'TIME!' : 'OOPS!');
+  pop.classList.remove('show', 'bad');
+  void pop.offsetWidth;
+  pop.classList.toggle('bad', !ok);
+  pop.classList.add('show');
+
+  $('#qScore').textContent = game.score.toLocaleString();
+  $('#qStreak').textContent = game.streak;
+
+  const last = game.i + 1 >= game.list.length;
+  const next = $('#nextBtn');
+  next.textContent = last ? 'See my results' : 'Next question';
+  next.hidden = false;
+  next.focus({ preventScroll: true });
+  next.scrollIntoView({ block: 'nearest' });
+}
+
+$('#nextBtn').addEventListener('click', () => {
+  if (game.i + 1 >= game.list.length) finish();
+  else { game.i++; renderQuestion(); }
+});
+
+function finish() {
+  stopTimer();
+  const total = game.list.length;
+  const rank = RANKS.find(r => game.correct >= r[0]);
+  const best = store.get('mmv-best', {});
+  const prev = best[mode];
+  const isBest = !prev || game.score > prev.score;
+  if (isBest) { best[mode] = { score: game.score, correct: game.correct }; store.set('mmv-best', best); }
+
+  $('#rBurst').textContent = `${game.correct}/${total}`;
+  $('#rRank').textContent = rank[1];
+  $('#rLine').textContent = rank[2];
+  $('#rStats').textContent = `${game.score.toLocaleString()} points on ${MODES[mode].name} level.` + (isBest ? ' That is your best score for this level.' : '');
+
+  $('#missed').innerHTML = game.missed.length
+    ? `<h4>Questions to review</h4><ul>${game.missed.map(m => `<li>${esc(m.q)}<b>Answer: ${esc(m.a)}</b></li>`).join('')}</ul>`
+    : `<h4>No misses</h4><p>Every answer was right. Try a harder level next.</p>`;
+
+  showScreen('done');
+  bringIntoView();
+  $('#rRank').focus({ preventScroll: true });
+}
+})();
+</script>
+</body>
+</html>
