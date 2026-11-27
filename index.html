@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MarvelVault: movie guide and quiz</title>
-<meta name="description" content="Browse every Marvel Cinematic Universe movie with a short story summary, then take a 10-question quiz to test your Marvel movie knowledge.">
+<title>MarvelVault: Marvel movie and series guide</title>
+<meta name="description" content="Browse Marvel movies and live-action, animated and web series from classic TV through today's streaming shows.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -60,7 +60,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .btn.small:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
 
 /* ============ Header ============ */
-.top{position:sticky;top:0;z-index:20;background:var(--sun);border-bottom:var(--border)}
+.top{position:sticky;top:0;z-index:20;background:var(--sun);border-bottom:var(--border);transition:transform .28s cubic-bezier(.22,.68,0,1),opacity .2s ease}
+.top.is-hidden{transform:translateY(calc(-100% - 4px));opacity:0;pointer-events:none}
 .top-in{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{position:relative;display:inline-flex;align-items:center;justify-content:center;width:clamp(180px,26vw,420px);min-width:180px;padding:0;border:4px solid var(--ink);background:#e11b20;box-shadow:5px 5px 0 rgba(20,16,42,.82);transform:rotate(-1.5deg);text-decoration:none;overflow:hidden;isolation:isolate;transition:transform .18s ease,box-shadow .18s ease}
 .brand:hover{transform:translate(-1px,-1px) rotate(-1.5deg);box-shadow:3px 3px 0 rgba(20,16,42,.82)}
@@ -89,6 +90,48 @@ button{font:inherit;color:inherit;cursor:pointer}
 .hero::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(20,16,42,.2) 20%,transparent 22%);background-size:16px 16px;-webkit-mask-image:linear-gradient(100deg,#000 0%,transparent 58%);mask-image:linear-gradient(100deg,#000 0%,transparent 58%)}
 .hero-in{position:relative;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
 .hero h1{font-size:clamp(3.4rem,10.5vw,7.4rem);line-height:.9;color:#fff;-webkit-text-stroke:10px var(--ink);paint-order:stroke fill;text-shadow:8px 8px 0 var(--red);transform:rotate(-2.5deg);transform-origin:left bottom;margin-bottom:30px;letter-spacing:.02em}
+.doomsday-widget{position:relative;isolation:isolate;width:fit-content;max-width:34rem;margin:0 0 28px;padding:0;overflow:hidden;background:transparent;border:5px solid transparent;box-shadow:none;transition:background .35s ease,border-color .35s ease,box-shadow .35s ease,padding .35s ease}
+.doomsday-widget.is-open{width:100%;padding:clamp(14px,3vw,24px);background:linear-gradient(145deg,#062c20 0%,#090b0a 62%,#03170f 100%);border-color:#090b0a;box-shadow:7px 7px 0 #17633f}
+.doomsday-watch{position:relative;display:grid;place-items:center;width:clamp(116px,28vw,144px);aspect-ratio:1;padding:0;border:0;background:none;cursor:pointer;transition:width .5s cubic-bezier(.2,.8,.2,1),filter .3s ease,transform .3s ease}
+.doomsday-watch:hover{filter:drop-shadow(0 0 12px rgba(44,125,82,.48));transform:translateY(-2px)}
+.doomsday-watch:active{transform:scale(.96)}
+.doomsday-watch:focus-visible{outline:4px solid #5b9b74;outline-offset:5px;border-radius:50%}
+.doomsday-widget.is-open .doomsday-watch{width:clamp(164px,42vw,210px);margin:0 auto 14px}
+.hero .doomsday-title{font-size:clamp(2.6rem,7vw,4.4rem);line-height:.82;margin:0 0 12px;letter-spacing:.035em;color:#a7f3d0;-webkit-text-stroke:4px #111217;text-shadow:4px 4px 0 #16804a}
+.doomsday-title span{display:block}
+.doomsday-label{font-family:var(--f-display);font-size:1.15rem;letter-spacing:.05em;margin-bottom:12px;color:#dcfce7}
+.doomsday-face{position:relative;width:100%;height:100%;border:5px solid #17633f;border-radius:50%;background:radial-gradient(circle at 36% 30%,#183b2c 0,#0a1d15 42%,#030806 82%);box-shadow:inset 0 0 0 4px #050a07,inset 0 0 24px rgba(0,0,0,.96),0 0 0 3px #8eaa99,0 6px 0 #050506;isolation:isolate;transition:box-shadow .35s ease,border-color .35s ease}
+.doomsday-widget.is-open .doomsday-face{border-color:#2d8054}
+.doomsday-face::before,.doomsday-face::after{content:"";position:absolute;inset:8px;border-radius:50%;pointer-events:none}
+.doomsday-face::before{background:repeating-conic-gradient(from -1deg,#9bb6a5 0 1.2deg,transparent 1.5deg 6deg);mask:radial-gradient(transparent 0 76%,#000 77% 86%,transparent 87%)}
+.doomsday-face::after{inset:17px;background:repeating-conic-gradient(from -1deg,#28734c 0 2deg,transparent 2.5deg 30deg);mask:radial-gradient(transparent 0 79%,#000 80% 92%,transparent 93%)}
+.clock-number{position:absolute;z-index:1;color:#c4d6ca;font-family:var(--f-display);font-size:1.15rem;line-height:1;text-shadow:1px 2px 0 #050506}
+.clock-xii{top:12%;left:50%;transform:translateX(-50%)}
+.clock-i{top:17%;right:25%}
+.clock-ii{top:31%;right:14%}
+.clock-iii{top:50%;right:9%;transform:translateY(-50%)}
+.clock-iv{right:14%;bottom:31%}
+.clock-v{right:25%;bottom:17%}
+.clock-vi{bottom:10%;left:50%;transform:translateX(-50%)}
+.clock-vii{bottom:17%;left:25%}
+.clock-viii{bottom:31%;left:14%}
+.clock-ix{top:50%;left:9%;transform:translateY(-50%)}
+.clock-x{top:31%;left:14%}
+.clock-xi{top:17%;left:25%}
+.doomsday-hand{position:absolute;z-index:2;bottom:50%;left:calc(50% - 2px);width:4px;height:29%;border-radius:4px 4px 1px 1px;background:#a9c2b1;box-shadow:0 0 3px #050506;transform:rotate(var(--hand-angle,0deg));transform-origin:50% 100%;transition:transform .75s linear}
+.doomsday-hand-hour{left:calc(50% - 3px);width:6px;height:23%;background:#d2dfd6}
+.doomsday-hand-second{left:calc(50% - 1px);z-index:3;width:2px;height:39%;background:#39855d}
+.doomsday-core{position:absolute;z-index:4;top:50%;left:50%;width:13px;height:13px;border:2px solid #090b0a;border-radius:50%;background:#39855d;transform:translate(-50%,-50%);box-shadow:0 0 0 2px #9bb6a5}
+.doomsday-details{display:grid;grid-template-rows:0fr;opacity:0;transform:translateY(-12px) scale(.98);transition:grid-template-rows .55s cubic-bezier(.2,.8,.2,1),opacity .35s ease,transform .55s cubic-bezier(.2,.8,.2,1)}
+.doomsday-widget.is-open .doomsday-details{grid-template-rows:1fr;opacity:1;transform:none}
+.doomsday-details-inner{min-height:0;overflow:hidden}
+.doomsday-readout{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;width:100%;padding:12px;background:rgba(3,10,7,.82);border:2px solid #17633f}
+.doomsday-unit{min-width:0;padding:6px 3px 5px;text-align:center;background:#09110c;border:1px solid #205b3b}
+.doomsday-value{display:block;color:#fff;font-size:clamp(1.2rem,4vw,1.8rem);font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.doomsday-unit-label{display:block;margin-top:3px;color:#6fa883;font-family:var(--f-display);font-size:.78rem;letter-spacing:.06em}
+.doomsday-release{margin-top:12px;font-size:.82rem;font-weight:700;color:#dcfce7}
+.doomsday-open-hint{position:absolute;right:-5px;bottom:4px;display:grid;place-items:center;width:30px;height:30px;border:2px solid #090b0a;border-radius:50%;background:#28734c;color:#e3eee7;font-size:1.2rem;font-weight:700;box-shadow:0 2px 0 #9bb6a5;transition:transform .25s ease}
+.doomsday-widget.is-open .doomsday-open-hint{transform:rotate(45deg)}
 .intro{background:#fff;border:var(--border);box-shadow:var(--shadow);padding:18px 20px;max-width:34rem;font-size:1.08rem;font-weight:500;transform:rotate(.6deg)}
 .cta{display:flex;flex-wrap:wrap;gap:16px;margin-top:30px}
 
@@ -171,12 +214,22 @@ h2.title{font-size:clamp(2.6rem,7vw,4.4rem);line-height:1}
 
 .grid{margin:30px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:34px 28px}
 .card{height:100%;display:flex;flex-direction:column;background:#fff;border:var(--border);box-shadow:var(--shadow)}
-.cover{position:relative;height:132px;background:var(--c);border-bottom:var(--border);overflow:hidden;padding:0 14px 8px;display:flex;align-items:flex-end}
+.cover{position:relative;width:100%;height:132px;background:var(--c);border:0;border-bottom:var(--border);overflow:hidden;padding:0 14px 8px;display:flex;align-items:flex-end;text-align:left}
 .cover::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(20,16,42,.26) 20%,transparent 22%);background-size:10px 10px}
 .cover::after{content:"";position:absolute;right:-34px;top:-30px;width:120px;height:220px;background:rgba(255,255,255,.22);transform:rotate(25deg)}
+.cover-poster{position:absolute;z-index:1;right:12px;top:50%;width:auto;height:100%;max-width:100%;object-fit:contain;transform:translateY(-50%);opacity:0;transition:opacity .25s ease}
+.cover.has-poster{background-color:var(--poster-color,var(--c))}
+.cover.has-poster::before{z-index:0;background-image:radial-gradient(color-mix(in srgb,var(--poster-color,var(--c)) 18%,#14102A) 20%,transparent 22%),linear-gradient(135deg,color-mix(in srgb,var(--poster-color,var(--c)) 94%,#fff),color-mix(in srgb,var(--poster-color,var(--c)) 86%,#14102A));background-size:9px 9px,100% 100%;filter:saturate(1.55)}
+.cover.has-poster::after{display:block;z-index:0;inset:0;width:auto;height:auto;right:0;top:0;transform:none;background:color-mix(in srgb,var(--poster-color,var(--c)) 84%,#fff);clip-path:polygon(78% 0,100% 0,58% 100%,36% 100%);opacity:.45;filter:saturate(1.55)}
+.cover.has-poster.is-red-palette{background-color:var(--ink)}
+.cover.has-poster.is-red-palette::after{background:color-mix(in srgb,var(--poster-color) 54%,var(--ink));opacity:.72}
+.cover.has-poster .cover-poster{opacity:1}
 .tags{position:absolute;z-index:2;left:12px;right:12px;top:10px;display:flex;flex-wrap:wrap;gap:8px}
 .tag{background:#fff;color:var(--ink);border:3px solid var(--ink);font-family:var(--f-display);font-size:1.05rem;letter-spacing:.04em;line-height:1.25;padding:0 8px 2px}
-.year{position:relative;z-index:1;font-family:var(--f-display);font-size:3.6rem;line-height:.9;color:#fff;-webkit-text-stroke:8px var(--ink);paint-order:stroke fill;letter-spacing:.03em}
+.year{position:relative;z-index:1;font-family:var(--f-display);font-size:3.6rem;line-height:.9;color:#fff;-webkit-text-stroke:8px var(--ink);paint-order:stroke fill;letter-spacing:.03em;pointer-events:none}
+.cover.has-poster .year{font-size:2.6rem;line-height:.9;color:#fff;-webkit-text-stroke:5px var(--ink);paint-order:stroke fill;letter-spacing:.01em}
+.cover-hint{position:absolute;z-index:2;right:12px;bottom:12px;background:#fff;border:2px solid var(--ink);padding:1px 7px;font-size:.75rem;font-weight:700;opacity:0;transform:translateY(4px);transition:opacity .18s,transform .18s}
+.cover:hover .cover-hint,.cover:focus-visible .cover-hint{opacity:1;transform:none}
 .soon{position:absolute;z-index:2;right:10px;bottom:12px;background:var(--sun);color:var(--ink);border:3px solid var(--ink);font-family:var(--f-display);font-size:1.15rem;letter-spacing:.04em;line-height:1.2;padding:0 10px 2px;transform:rotate(-6deg)}
 .body{padding:16px 16px 14px;display:flex;flex-direction:column;gap:8px;flex:1}
 .card h3{font-size:1.85rem;line-height:1.02}
@@ -191,6 +244,35 @@ h2.title{font-size:clamp(2.6rem,7vw,4.4rem);line-height:1}
 .empty{grid-column:1/-1;background:#fff;border:var(--border);box-shadow:var(--shadow);padding:28px;text-align:center;display:grid;gap:14px;justify-items:center}
 .empty h3{font-size:2rem}
 
+/* Marvel series */
+.series{background:#fff4c2;background-image:radial-gradient(rgba(232,38,45,.14) 20%,transparent 22%);background-size:16px 16px;padding:68px 20px 88px;border-bottom:var(--border);scroll-margin-top:92px}
+.series-controls{margin-top:30px;background:#fff;border:var(--border);box-shadow:var(--shadow);padding:18px;display:grid;grid-template-columns:1fr minmax(240px,.55fr);gap:18px;align-items:center}
+.series-filters{display:flex;flex-wrap:wrap;gap:10px}
+.series-filter{border:3px solid var(--ink);background:#fff;padding:6px 12px;font-family:var(--f-display);font-size:1.08rem;letter-spacing:.03em;box-shadow:3px 3px 0 var(--ink);transition:transform .15s ease,background-color .15s ease,color .15s ease}
+.series-filter:hover{background:var(--sun)}
+.series-filter[aria-pressed="true"]{background:var(--ink);color:#fff;transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.series-meta{margin-top:22px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.series-note{font-size:.88rem;font-weight:500}
+.series-grid{grid-template-columns:repeat(auto-fill,minmax(245px,1fr))}
+.series-group{margin-top:34px}
+.series-group-title{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;font-family:var(--f-display);font-size:clamp(2rem,5vw,3rem);line-height:1;padding-bottom:10px;border-bottom:4px solid var(--ink)}
+.series-group-title::-webkit-details-marker{display:none}
+.series-group-title::after{content:"+";flex:none;font-family:var(--f-body);font-size:1.5rem}
+.series-group[open]>.series-group-title::after{content:"−"}
+.series-group-title:focus-visible{outline:4px solid var(--blue);outline-offset:4px}
+.series-group-title .series-toggle-label{font:600 .78rem var(--f-body);letter-spacing:0}
+.series-group[hidden],.series-empty[hidden]{display:none}
+.series-empty{margin-top:24px}
+.series-cover{position:relative;min-height:108px;display:flex;align-items:flex-end;overflow:hidden;padding:16px;background:var(--series-color,#1F5BFF);border-bottom:var(--border);isolation:isolate}
+.series-cover::before{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(rgba(255,255,255,.34) 16%,transparent 18%),repeating-conic-gradient(from 0deg at 100% 0%,transparent 0 7deg,rgba(20,16,42,.16) 7deg 9deg);background-size:12px 12px,100% 100%}
+.series-cover::after{content:"";position:absolute;z-index:-1;right:-25px;top:-70px;width:105px;height:230px;background:rgba(255,255,255,.22);transform:rotate(24deg)}
+.series-year{font-family:var(--f-display);font-size:3rem;line-height:.9;color:#fff;-webkit-text-stroke:6px var(--ink);paint-order:stroke fill;letter-spacing:.03em}
+.series-kind{position:absolute;top:10px;left:10px;background:#fff;border:3px solid var(--ink);padding:0 8px 2px;font-family:var(--f-display);font-size:.92rem;letter-spacing:.03em}
+.series-card .body{gap:9px}
+.series-card h3{font-size:1.65rem}
+.series-format{font-size:.78rem;font-weight:700;color:var(--soft-ink)}
+.series-summary{font-size:.9rem}
+
 /* Movie dialog */
 dialog{padding:0;border:var(--border);background:#fff;color:var(--ink);box-shadow:10px 10px 0 var(--ink);width:min(720px,calc(100vw - 28px));max-height:calc(100dvh - 28px);overflow:auto}
 dialog::backdrop{background:rgba(20,16,42,.74);background-image:radial-gradient(rgba(255,255,255,.12) 20%,transparent 22%);background-size:12px 12px}
@@ -200,7 +282,12 @@ dialog::backdrop{background:rgba(20,16,42,.74);background-image:radial-gradient(
 .d-cover .title{position:relative;font-size:clamp(2.2rem,7vw,3.6rem);line-height:.98;text-shadow:5px 5px 0 var(--ink)}
 .close{position:absolute;z-index:2;right:14px;top:14px;width:44px;height:44px;background:#fff;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);font-family:var(--f-display);font-size:1.8rem;line-height:1;display:grid;place-items:center;padding:0 0 4px}
 .close:hover{background:var(--pink)}
-.d-body{padding:22px 24px 26px;display:grid;gap:20px}
+.d-body{padding:22px 24px 26px;display:grid;grid-template-columns:minmax(140px,.7fr) minmax(0,1.3fr);align-items:start;gap:20px}
+.d-poster{margin:0;display:grid;gap:8px;justify-items:center}
+.d-poster img{display:block;width:min(100%,240px);aspect-ratio:2/3;object-fit:contain;background:#eceaf3;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.d-poster-status,.d-poster-credit{font-size:.75rem;text-align:center}
+.d-poster-credit a{color:var(--soft-ink);font-weight:700}
+.d-content{min-width:0;display:grid;gap:20px}
 .d-about{font-size:1.08rem;max-width:62ch}
 .facts{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
 .fact{border:3px solid var(--ink);padding:8px 12px;background:var(--sky)}
@@ -376,17 +463,22 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
   .community-main{grid-template-columns:1fr}
   .poll-contenders{grid-template-columns:1fr}
   .poll-versus{padding:0;text-align:center}
-  .movies,.quiz{padding-left:16px;padding-right:16px}
+  .movies,.series,.quiz{padding-left:16px;padding-right:16px}
+  .series-controls{grid-template-columns:1fr}
 }
 @media (max-width:520px){
   .top-in{padding:8px 12px;gap:8px;flex-wrap:wrap}
   .brand{width:clamp(140px,38vw,220px);min-width:140px}
-  .nav{gap:6px}
+  .nav{gap:6px;flex-wrap:wrap;justify-content:flex-end}
   .nav a{font-size:1rem;padding:2px 8px 3px;box-shadow:2px 2px 0 var(--ink)}
+  .doomsday-readout{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:8px}
+  .doomsday-unit{padding:6px 2px 5px}
+  .doomsday-unit-label{font-size:.72rem}
   .burst{width:200px;height:200px}
   .burst .bt{font-size:3.2rem}
   .d-cover{padding:18px 64px 18px 18px}
-  .d-body{padding:18px}
+  .d-body{padding:18px;grid-template-columns:1fr}
+  .d-poster img{width:min(62vw,240px)}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -405,6 +497,7 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
     <a class="brand" href="#top" aria-label="MarvelVault home"><img src="assets/marvel-logo.png" alt="Marvel logo"></a>
     <nav class="nav" aria-label="Main">
       <a href="#movies">Movies</a>
+      <a href="#series">Series</a>
       <a href="#quiz">Quiz</a>
       <a class="nav-war-poll" href="#war-polls">War Poll</a>
       <a class="nav-fan-sign-in" href="#fan-sign-in">Sign in</a>
@@ -419,10 +512,41 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
   <section class="hero" aria-labelledby="heroTitle">
     <div class="hero-in">
       <div>
-        <h1 id="heroTitle">MarvelVault</h1>
-        <p class="intro">Browse every Marvel Cinematic Universe movie, from Iron Man in 2008 to the next Avengers film. Read what each one is about, then test yourself in a 10-question quiz.</p>
+        <div class="doomsday-widget">
+          <h1 class="sr" id="heroTitle">Doomsday Clock</h1>
+          <button type="button" class="doomsday-watch" id="doomsdayToggle" aria-expanded="false" aria-controls="doomsdayDetails" aria-label="Open Avengers: Doomsday countdown">
+            <span class="doomsday-face" aria-hidden="true">
+              <span class="clock-number clock-xii">XII</span><span class="clock-number clock-i">I</span>
+              <span class="clock-number clock-ii">II</span><span class="clock-number clock-iii">III</span>
+              <span class="clock-number clock-iv">IV</span><span class="clock-number clock-v">V</span>
+              <span class="clock-number clock-vi">VI</span><span class="clock-number clock-vii">VII</span>
+              <span class="clock-number clock-viii">VIII</span><span class="clock-number clock-ix">IX</span>
+              <span class="clock-number clock-x">X</span><span class="clock-number clock-xi">XI</span>
+              <span class="doomsday-hand doomsday-hand-hour" id="doomsdayHourHand"></span>
+              <span class="doomsday-hand doomsday-hand-minute" id="doomsdayMinuteHand"></span>
+              <span class="doomsday-hand doomsday-hand-second" id="doomsdaySecondHand"></span>
+              <span class="doomsday-core"></span>
+            </span>
+            <span class="doomsday-open-hint" aria-hidden="true">+</span>
+          </button>
+          <div class="doomsday-details" id="doomsdayDetails" role="timer" aria-label="Countdown to Avengers: Doomsday U.S. release" aria-live="off" aria-hidden="true" inert>
+            <div class="doomsday-details-inner">
+              <h2 class="doomsday-title" aria-label="Doomsday Clock"><span>Doomsday</span><span>Clock</span></h2>
+              <p class="doomsday-label">Countdown to Avengers: Doomsday</p>
+              <div class="doomsday-readout">
+                <div class="doomsday-unit"><span class="doomsday-value" id="doomsdayDays">--</span><span class="doomsday-unit-label">Days</span></div>
+                <div class="doomsday-unit"><span class="doomsday-value" id="doomsdayHours">--</span><span class="doomsday-unit-label">Hours</span></div>
+                <div class="doomsday-unit"><span class="doomsday-value" id="doomsdayMinutes">--</span><span class="doomsday-unit-label">Minutes</span></div>
+                <div class="doomsday-unit"><span class="doomsday-value" id="doomsdaySeconds">--</span><span class="doomsday-unit-label">Seconds</span></div>
+              </div>
+              <p class="doomsday-release" id="doomsdayRelease">U.S. release: <time id="doomsdayReleaseDate" datetime="2026-12-18">December 18, 2026</time></p>
+            </div>
+          </div>
+        </div>
+        <p class="intro">Explore Marvel movies and series, from classic TV adventures to animated favorites, streaming shows and web series. Then test your Marvel knowledge in a 10-question quiz.</p>
         <div class="cta">
           <a class="btn" href="#movies">Browse the movies</a>
+          <a class="btn alt" href="#series">Explore the series</a>
           <a class="btn alt" href="#quiz">Start the quiz</a>
         </div>
       </div>
@@ -433,7 +557,7 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
           <button type="button" class="page-arrow" data-page="next" aria-label="Next comic page">→</button>
         </div>
         <div class="page-frame">
-          <img class="page-art is-visible" id="pageArt" src="assets/comic-page-spider-man.jpg" alt="Spider-Man comic panels">
+          <img class="page-art is-visible" id="pageArt" src="assets/comic-page-secret-wars.jpg" alt="Marvel Super Heroes Secret Wars activity-book cover">
           <img class="page-art" id="pageArtNext" alt="" aria-hidden="true">
           <div class="ability-effects" id="abilityEffects" aria-hidden="true">
             <span class="ability-effect ability-effect-lightning" data-effect="lightning">
@@ -500,6 +624,50 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
       </div>
 
       <ul class="grid" id="grid"></ul>
+    </div>
+  </section>
+
+  <!-- ================= MARVEL SERIES ================= -->
+  <section class="series" id="series" aria-labelledby="seriesTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="title" id="seriesTitle">Marvel series &amp; web shows</h2>
+        <p class="lede">Explore Marvel television across the decades: live-action, animation, streaming originals, short-form web series and documentary shows.</p>
+      </div>
+      <div class="series-controls">
+        <div class="series-filters" id="seriesFilters" role="group" aria-label="Filter Marvel series">
+          <button type="button" class="series-filter" data-series-filter="all" aria-pressed="true">All series</button>
+          <button type="button" class="series-filter" data-series-filter="live" aria-pressed="false">Live action</button>
+          <button type="button" class="series-filter" data-series-filter="animated" aria-pressed="false">Animation</button>
+          <button type="button" class="series-filter" data-series-filter="web" aria-pressed="false">Web &amp; documentaries</button>
+        </div>
+        <label class="field">Search Marvel series
+          <input type="search" id="seriesSearch" placeholder="Try Spider-Man, X-Men or Loki" autocomplete="off">
+        </label>
+      </div>
+      <div class="series-meta">
+        <p class="count" id="seriesCount" aria-live="polite"></p>
+        <p class="series-note">Classic shows, modern streaming originals, animated series, web shorts and documentaries.</p>
+      </div>
+      <div id="seriesGroups">
+        <details class="series-group" data-series-group="live">
+          <summary class="series-group-title" id="liveSeriesTitle">Live-action series<span class="series-toggle-label">Open to browse</span></summary>
+          <ul class="grid series-grid" id="liveSeriesGrid"></ul>
+        </details>
+        <details class="series-group" data-series-group="animated">
+          <summary class="series-group-title" id="animatedSeriesTitle">Animated series<span class="series-toggle-label">Open to browse</span></summary>
+          <ul class="grid series-grid" id="animatedSeriesGrid"></ul>
+        </details>
+        <details class="series-group" data-series-group="web">
+          <summary class="series-group-title" id="webSeriesTitle">Web series &amp; documentaries<span class="series-toggle-label">Open to browse</span></summary>
+          <ul class="grid series-grid" id="webSeriesGrid"></ul>
+        </details>
+      </div>
+      <div class="empty series-empty" id="seriesEmpty" hidden>
+        <h3>No series found</h3>
+        <p>Try another title or clear your search and filter.</p>
+        <button type="button" class="btn small" id="clearSeriesFilters">Clear filters</button>
+      </div>
     </div>
   </section>
 
@@ -669,15 +837,22 @@ footer strong{font-family:var(--f-display);font-weight:400;font-size:1.6rem;lett
     <h3 class="title" id="dTitle"></h3>
   </div>
   <div class="d-body">
-    <p class="d-about" id="dAbout"></p>
-    <dl class="facts" id="dFacts"></dl>
-    <div>
-      <h4>Key heroes and villains</h4>
-      <ul class="who" id="dWho"></ul>
-    </div>
-    <div class="acts">
-      <button type="button" class="btn small alt" id="dDone">Close</button>
-      <button type="button" class="seen" id="dSeen" aria-pressed="false"><span class="box" aria-hidden="true"></span>Seen it</button>
+    <figure class="d-poster">
+      <img id="dPoster" alt="" hidden>
+      <p class="d-poster-status" id="dPosterStatus" role="status" aria-live="polite">Loading movie poster…</p>
+      <figcaption class="d-poster-credit" id="dPosterCredit" hidden>Poster: <a id="dPosterSource" target="_blank" rel="noreferrer">Wikipedia</a></figcaption>
+    </figure>
+    <div class="d-content">
+      <p class="d-about" id="dAbout"></p>
+      <dl class="facts" id="dFacts"></dl>
+      <div>
+        <h4>Key heroes and villains</h4>
+        <ul class="who" id="dWho"></ul>
+      </div>
+      <div class="acts">
+        <button type="button" class="btn small alt" id="dDone">Close</button>
+        <button type="button" class="seen" id="dSeen" aria-pressed="false"><span class="box" aria-hidden="true"></span>Seen it</button>
+      </div>
     </div>
   </div>
 </dialog>
@@ -695,6 +870,27 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shuffle = a => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+const stickyHeader = $('.top');
+let previousScrollY = window.scrollY;
+let scrollUpdatePending = false;
+window.addEventListener('scroll', () => {
+  if (scrollUpdatePending) return;
+  scrollUpdatePending = true;
+  window.requestAnimationFrame(() => {
+    const currentScrollY = window.scrollY;
+    const scrollDelta = currentScrollY - previousScrollY;
+    if (currentScrollY < 96 || stickyHeader.contains(document.activeElement)) {
+      stickyHeader.classList.remove('is-hidden');
+    } else if (scrollDelta > 8) {
+      stickyHeader.classList.add('is-hidden');
+    } else if (scrollDelta < -8) {
+      stickyHeader.classList.remove('is-hidden');
+    }
+    previousScrollY = currentScrollY;
+    scrollUpdatePending = false;
+  });
+}, { passive: true });
+stickyHeader.addEventListener('focusin', () => stickyHeader.classList.remove('is-hidden'));
 const supabaseConfig = window.MARVEL_SUPABASE_CONFIG || {};
 let communityClient = null;
 let communityClientError = '';
@@ -1263,11 +1459,11 @@ function star(n, outer, inner) {
 document.documentElement.style.setProperty('--burst', star(14, 50, 37));
 
 const comicPages = [
+  { src: 'assets/comic-page-secret-wars.jpg', alt: 'Marvel Super Heroes Secret Wars activity-book cover' },
   { src: 'assets/comic-page-spider-man.jpg', alt: 'Spider-Man comic panels' },
   { src: 'assets/comic-page-avengers.jpg', alt: 'Avengers comic panel with armored heroes' },
   { src: 'assets/comic-page-battle.jpg', alt: 'Comic-book superhero battle panels' },
-  { src: 'assets/comic-page-iron-man-doom.jpg', alt: 'Iron Man facing Doctor Doom on a comic cover' },
-  { src: 'assets/comic-page-secret-wars.jpg', alt: 'Marvel Super Heroes Secret Wars activity-book cover' }
+  { src: 'assets/comic-page-iron-man-doom.jpg', alt: 'Iron Man facing Doctor Doom on a comic cover' }
 ];
 
 const comicPage = document.querySelector('.page');
@@ -1373,6 +1569,48 @@ const PHASES = {
   4: { c: '#00A28F', saga: 'Multiverse Saga', years: '2021 to 2022',   note: 'A fresh start with new heroes and the first real look at other universes.' },
   5: { c: '#FF7A00', saga: 'Multiverse Saga', years: '2023 to 2025',   note: 'Multiverse threats grow while old heroes pass the torch and new teams form.' },
   6: { c: '#7A3FE0', saga: 'Multiverse Saga', years: '2025 and beyond', note: 'The road to the next big Avengers crossovers.' }
+};
+
+const MOVIE_COMIC_COLORS = {
+  "Iron Man": "#F51F32",
+  "The Incredible Hulk": "#278447",
+  "Iron Man 2": "#F51F32",
+  "Thor": "#D92345",
+  "Captain America: The First Avenger": "#183D70",
+  "The Avengers": "#243B68",
+  "Iron Man 3": "#F51F32",
+  "Thor: The Dark World": "#C91F3D",
+  "Captain America: The Winter Soldier": "#183D70",
+  "Guardians of the Galaxy": "#533B75",
+  "Avengers: Age of Ultron": "#294873",
+  "Ant-Man": "#F02B3D",
+  "Captain America: Civil War": "#1C477D",
+  "Doctor Strange": "#32618B",
+  "Guardians of the Galaxy Vol. 2": "#65447D",
+  "Spider-Man: Homecoming": "#F21E36",
+  "Thor: Ragnarok": "#126C70",
+  "Black Panther": "#292641",
+  "Avengers: Infinity War": "#37315E",
+  "Ant-Man and the Wasp": "#F02B3D",
+  "Captain Marvel": "#244C89",
+  "Avengers: Endgame": "#254978",
+  "Spider-Man: Far From Home": "#F21E36",
+  "Black Widow": "#E9213D",
+  "Shang-Chi and the Legend of the Ten Rings": "#F0233D",
+  "Eternals": "#34536D",
+  "Spider-Man: No Way Home": "#F21E36",
+  "Doctor Strange in the Multiverse of Madness": "#493875",
+  "Thor: Love and Thunder": "#2A5689",
+  "Black Panther: Wakanda Forever": "#263D55",
+  "Ant-Man and the Wasp: Quantumania": "#49366D",
+  "Guardians of the Galaxy Vol. 3": "#563B70",
+  "The Marvels": "#254F89",
+  "Deadpool & Wolverine": "#F21E36",
+  "Captain America: Brave New World": "#1D4779",
+  "Thunderbolts*": "#36343F",
+  "The Fantastic Four: First Steps": "#28578B",
+  "Spider-Man: Brand New Day": "#F21E36",
+  "Avengers: Doomsday": "#333344"
 };
 
 /* ============ Data: movies (in release order) ============ */
@@ -1499,6 +1737,228 @@ const MOVIES = [
 const NOW = new Date();
 MOVIES.forEach((m, i) => { m.n = i + 1; m.up = new Date(m.d + 'T00:00:00') > NOW; });
 const RELEASED = MOVIES.filter(m => !m.up);
+const doomsdayMovie = MOVIES.find(movie => movie.t === 'Avengers: Doomsday');
+const doomsdayTarget = doomsdayMovie ? new Date(`${doomsdayMovie.d}T00:00:00-05:00`).getTime() : NaN;
+const doomsdayDate = $('#doomsdayReleaseDate');
+const doomsdayRelease = $('#doomsdayRelease');
+const doomsdayWidget = $('.doomsday-widget');
+const doomsdayToggle = $('#doomsdayToggle');
+const doomsdayDetails = $('#doomsdayDetails');
+let doomsdayTimer;
+
+doomsdayToggle.addEventListener('click', () => {
+  const expanded = doomsdayToggle.getAttribute('aria-expanded') !== 'true';
+  doomsdayToggle.setAttribute('aria-expanded', String(expanded));
+  doomsdayToggle.setAttribute('aria-label', `${expanded ? 'Close' : 'Open'} Avengers: Doomsday countdown`);
+  doomsdayDetails.setAttribute('aria-hidden', String(!expanded));
+  doomsdayDetails.inert = !expanded;
+  doomsdayWidget.classList.toggle('is-open', expanded);
+});
+
+if (Number.isFinite(doomsdayTarget)) {
+  doomsdayDate.dateTime = doomsdayMovie.d;
+  doomsdayDate.textContent = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC'
+  }).format(new Date(`${doomsdayMovie.d}T00:00:00Z`));
+
+  function updateDoomsdayClock() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    $('#doomsdayHourHand').style.setProperty('--hand-angle', `${(hours % 12 + minutes / 60 + seconds / 3600) * 30}deg`);
+    $('#doomsdayMinuteHand').style.setProperty('--hand-angle', `${(minutes + seconds / 60) * 6}deg`);
+    $('#doomsdaySecondHand').style.setProperty('--hand-angle', `${seconds * 6}deg`);
+
+    const remaining = doomsdayTarget - Date.now();
+    if (remaining <= 0) {
+      $('#doomsdayDays').textContent = '00';
+      $('#doomsdayHours').textContent = '00';
+      $('#doomsdayMinutes').textContent = '00';
+      $('#doomsdaySeconds').textContent = '00';
+      doomsdayRelease.textContent = 'Avengers: Doomsday has arrived!';
+      return;
+    }
+
+    const totalSeconds = Math.floor(remaining / 1000);
+    $('#doomsdayDays').textContent = String(Math.floor(totalSeconds / 86400)).padStart(2, '0');
+    $('#doomsdayHours').textContent = String(Math.floor(totalSeconds % 86400 / 3600)).padStart(2, '0');
+    $('#doomsdayMinutes').textContent = String(Math.floor(totalSeconds % 3600 / 60)).padStart(2, '0');
+    $('#doomsdaySeconds').textContent = String(totalSeconds % 60).padStart(2, '0');
+  }
+
+  updateDoomsdayClock();
+  doomsdayTimer = window.setInterval(updateDoomsdayClock, 1000);
+}
+const MOVIE_POSTERS = {
+  "Iron Man": { image: "https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%282008_film%29_poster.jpg", source: "https://en.wikipedia.org/wiki/Iron_Man_(2008_film)" },
+  "The Incredible Hulk": { image: "https://upload.wikimedia.org/wikipedia/en/f/f0/The_Incredible_Hulk_%28film%29_poster.jpg", source: "https://en.wikipedia.org/wiki/The_Incredible_Hulk_(film)" },
+  "Iron Man 2": { image: "https://upload.wikimedia.org/wikipedia/en/e/ed/Iron_Man_2_poster.jpg", source: "https://en.wikipedia.org/wiki/Iron_Man_2" },
+  "Thor": { image: "https://upload.wikimedia.org/wikipedia/en/9/95/Thor_%28film%29_poster.jpg", source: "https://en.wikipedia.org/wiki/Thor_(film)" },
+  "Captain America: The First Avenger": { image: "https://upload.wikimedia.org/wikipedia/en/3/37/Captain_America_The_First_Avenger_poster.jpg", source: "https://en.wikipedia.org/wiki/Captain_America%3A_The_First_Avenger" },
+  "The Avengers": { image: "https://upload.wikimedia.org/wikipedia/en/8/8a/The_Avengers_%282012_film%29_poster.jpg", source: "https://en.wikipedia.org/wiki/The_Avengers_(2012_film)" },
+  "Iron Man 3": { image: "https://upload.wikimedia.org/wikipedia/en/1/19/Iron_Man_3_poster.jpg", source: "https://en.wikipedia.org/wiki/Iron_Man_3" },
+  "Thor: The Dark World": { image: "https://upload.wikimedia.org/wikipedia/en/7/7f/Thor_The_Dark_World_poster.jpg", source: "https://en.wikipedia.org/wiki/Thor%3A_The_Dark_World" },
+  "Captain America: The Winter Soldier": { image: "https://upload.wikimedia.org/wikipedia/en/9/9e/Captain_America_The_Winter_Soldier_poster.jpg", source: "https://en.wikipedia.org/wiki/Captain_America%3A_The_Winter_Soldier" },
+  "Guardians of the Galaxy": { image: "https://upload.wikimedia.org/wikipedia/en/3/33/Guardians_of_the_Galaxy_%28film%29_poster.jpg", source: "https://en.wikipedia.org/wiki/Guardians_of_the_Galaxy_(film)" },
+  "Avengers: Age of Ultron": { image: "https://upload.wikimedia.org/wikipedia/en/f/ff/Avengers_Age_of_Ultron_poster.jpg", source: "https://en.wikipedia.org/wiki/Avengers%3A_Age_of_Ultron" },
+  "Ant-Man": { image: "https://upload.wikimedia.org/wikipedia/en/1/12/Ant-Man_%28film%29_poster.jpg", source: "https://en.wikipedia.org/wiki/Ant-Man_(film)" },
+  "Captain America: Civil War": { image: "https://upload.wikimedia.org/wikipedia/en/5/53/Captain_America_Civil_War_poster.jpg", source: "https://en.wikipedia.org/wiki/Captain_America%3A_Civil_War" },
+  "Doctor Strange": { image: "https://upload.wikimedia.org/wikipedia/en/a/a1/Doctor_Strange_%282016_film%29_poster.jpg", source: "https://en.wikipedia.org/wiki/Doctor_Strange_(2016_film)" },
+  "Guardians of the Galaxy Vol. 2": { image: "https://upload.wikimedia.org/wikipedia/en/3/32/Guardians_of_the_Galaxy_Vol._2_poster.jpg", source: "https://en.wikipedia.org/wiki/Guardians_of_the_Galaxy_Vol._2" },
+  "Spider-Man: Homecoming": { image: "https://upload.wikimedia.org/wikipedia/en/f/f9/Spider-Man_Homecoming_poster.jpg", source: "https://en.wikipedia.org/wiki/Spider-Man%3A_Homecoming" },
+  "Thor: Ragnarok": { image: "https://upload.wikimedia.org/wikipedia/en/7/7d/Thor_Ragnarok_poster.jpg", source: "https://en.wikipedia.org/wiki/Thor%3A_Ragnarok" },
+  "Black Panther": { image: "https://upload.wikimedia.org/wikipedia/en/d/d6/Black_Panther_%28film%29_poster.jpg", source: "https://en.wikipedia.org/wiki/Black_Panther_(film)" },
+  "Avengers: Infinity War": { image: "https://upload.wikimedia.org/wikipedia/en/4/4d/Avengers_Infinity_War_poster.jpg", source: "https://en.wikipedia.org/wiki/Avengers%3A_Infinity_War" },
+  "Ant-Man and the Wasp": { image: "https://upload.wikimedia.org/wikipedia/en/2/2c/Ant-Man_and_the_Wasp_poster.jpg", source: "https://en.wikipedia.org/wiki/Ant-Man_and_the_Wasp" },
+  "Captain Marvel": { image: "https://upload.wikimedia.org/wikipedia/en/4/4e/Captain_Marvel_%28film%29_poster.jpg", source: "https://en.wikipedia.org/wiki/Captain_Marvel_(film)" },
+  "Avengers: Endgame": { image: "https://upload.wikimedia.org/wikipedia/en/0/0d/Avengers_Endgame_poster.jpg", source: "https://en.wikipedia.org/wiki/Avengers%3A_Endgame" },
+  "Spider-Man: Far From Home": { image: "https://upload.wikimedia.org/wikipedia/en/b/bd/Spider-Man_Far_From_Home_poster.jpg", source: "https://en.wikipedia.org/wiki/Spider-Man%3A_Far_From_Home" },
+  "Black Widow": { image: "https://upload.wikimedia.org/wikipedia/en/e/e9/Black_Widow_%282021_film%29_poster.jpg", source: "https://en.wikipedia.org/wiki/Black_Widow_(2021_film)" },
+  "Shang-Chi and the Legend of the Ten Rings": { image: "https://upload.wikimedia.org/wikipedia/en/7/74/Shang-Chi_and_the_Legend_of_the_Ten_Rings_poster.jpeg", source: "https://en.wikipedia.org/wiki/Shang-Chi_and_the_Legend_of_the_Ten_Rings" },
+  "Eternals": { image: "https://upload.wikimedia.org/wikipedia/en/9/9b/Eternals_%28film%29_poster.jpeg", source: "https://en.wikipedia.org/wiki/Eternals_(film)" },
+  "Spider-Man: No Way Home": { image: "https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg", source: "https://en.wikipedia.org/wiki/Spider-Man%3A_No_Way_Home" },
+  "Doctor Strange in the Multiverse of Madness": { image: "https://upload.wikimedia.org/wikipedia/en/1/17/Doctor_Strange_in_the_Multiverse_of_Madness_poster.jpg", source: "https://en.wikipedia.org/wiki/Doctor_Strange_in_the_Multiverse_of_Madness" },
+  "Thor: Love and Thunder": { image: "https://upload.wikimedia.org/wikipedia/en/8/88/Thor_Love_and_Thunder_poster.jpeg", source: "https://en.wikipedia.org/wiki/Thor%3A_Love_and_Thunder" },
+  "Black Panther: Wakanda Forever": { image: "https://upload.wikimedia.org/wikipedia/en/3/3b/Black_Panther_Wakanda_Forever_poster.jpg", source: "https://en.wikipedia.org/wiki/Black_Panther%3A_Wakanda_Forever" },
+  "Ant-Man and the Wasp: Quantumania": { image: "https://upload.wikimedia.org/wikipedia/en/3/30/Ant-Man_and_the_Wasp_Quantumania_poster.jpg", source: "https://en.wikipedia.org/wiki/Ant-Man_and_the_Wasp%3A_Quantumania" },
+  "Guardians of the Galaxy Vol. 3": { image: "https://upload.wikimedia.org/wikipedia/en/7/74/Guardians_of_the_Galaxy_Vol._3_poster.jpg", source: "https://en.wikipedia.org/wiki/Guardians_of_the_Galaxy_Vol._3" },
+  "The Marvels": { image: "https://upload.wikimedia.org/wikipedia/en/7/7a/The_Marvels_poster.jpg", source: "https://en.wikipedia.org/wiki/The_Marvels" },
+  "Deadpool & Wolverine": { image: "https://upload.wikimedia.org/wikipedia/en/4/4c/Deadpool_%26_Wolverine_poster.jpg", source: "https://en.wikipedia.org/wiki/Deadpool_%26_Wolverine" },
+  "Captain America: Brave New World": { image: "https://upload.wikimedia.org/wikipedia/en/a/a4/Captain_America_Brave_New_World_poster.jpg", source: "https://en.wikipedia.org/wiki/Captain_America%3A_Brave_New_World" },
+  "Thunderbolts*": { image: "https://upload.wikimedia.org/wikipedia/en/9/90/Thunderbolts%2A_poster.jpg", source: "https://en.wikipedia.org/wiki/Thunderbolts*" },
+  "The Fantastic Four: First Steps": { image: "https://upload.wikimedia.org/wikipedia/en/1/13/The_Fantastic_Four_First_Steps_poster.jpg", source: "https://en.wikipedia.org/wiki/The_Fantastic_Four%3A_First_Steps" },
+  "Spider-Man: Brand New Day": { image: "https://upload.wikimedia.org/wikipedia/en/9/9a/Spider-Man_Brand_New_Day_poster.jpg", source: "https://en.wikipedia.org/wiki/Spider-Man%3A_Brand_New_Day" },
+  "Avengers: Doomsday": { image: "https://upload.wikimedia.org/wikipedia/en/e/ee/Avengers_Doomsday_poster.jpg", source: "https://en.wikipedia.org/wiki/Avengers%3A_Doomsday" }
+};
+let posterDialogRequest = 0;
+
+function getMoviePoster(movie) {
+  return MOVIE_POSTERS[movie.t] || null;
+}
+
+function loadCardPoster(cover) {
+  const movie = MOVIES[Number(cover.dataset.moviePoster) - 1];
+  if (!movie) return;
+  const image = $('.cover-poster', cover);
+  const poster = getMoviePoster(movie);
+  if (!poster) return;
+  image.onload = () => cover.classList.add('has-poster');
+  image.onerror = () => {
+    cover.classList.remove('has-poster');
+    cover.dataset.posterError = 'The poster image could not be loaded.';
+  };
+  image.src = poster.image;
+  image.alt = '';
+}
+
+const posterObserver = 'IntersectionObserver' in window
+  ? new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        posterObserver.unobserve(entry.target);
+        loadCardPoster(entry.target);
+      });
+    }, { rootMargin: '250px 0px' })
+  : null;
+
+/* ============ Data: Marvel series ============ */
+const MARVEL_SERIES = [
+  { t: 'The Marvel Super Heroes', y: 1966, kind: 'animated', format: 'Animated series', about: 'Five rotating segments bring Captain America, Iron Man, Thor, Hulk and Sub-Mariner to television.' },
+  { t: 'Fantastic Four', y: 1967, kind: 'animated', format: 'Animated series', about: 'The Fantastic Four use their powers to protect Earth from extraordinary threats.' },
+  { t: 'Spider-Man', y: 1967, kind: 'animated', format: 'Animated series', about: 'Peter Parker swings into action against villains threatening New York City.' },
+  { t: 'The New Fantastic Four', y: 1978, kind: 'animated', format: 'Animated series', about: 'The Fantastic Four take on new adventures with a different member joining the team.' },
+  { t: 'Spider-Woman', y: 1979, kind: 'animated', format: 'Animated series', about: 'Jessica Drew uses her powers to battle villains and help people around the world.' },
+  { t: 'Spider-Man', y: 1981, kind: 'animated', format: 'Animated series', about: 'The wall-crawler faces classic foes in a series of standalone adventures.' },
+  { t: 'Spider-Man and His Amazing Friends', y: 1981, kind: 'animated', format: 'Animated series', about: 'Spider-Man teams up with Iceman and Firestar to fight crime and supervillains.' },
+  { t: 'The Incredible Hulk', y: 1982, kind: 'animated', format: 'Animated series', about: 'Bruce Banner searches for a cure while trying to keep the Hulk and his enemies at bay.' },
+  { t: 'X-Men: The Animated Series', y: 1992, kind: 'animated', format: 'Animated series', about: 'The X-Men defend a world that fears and misunderstands mutants.' },
+  { t: 'Iron Man', y: 1994, kind: 'animated', format: 'Animated series', about: 'Tony Stark and his allies battle enemies seeking his advanced technology.' },
+  { t: 'Fantastic Four', y: 1994, kind: 'animated', format: 'Animated series', about: 'Marvel’s first family faces cosmic dangers and iconic supervillains.' },
+  { t: 'Spider-Man: The Animated Series', y: 1994, kind: 'animated', format: 'Animated series', about: 'Peter Parker protects the city and meets heroes and villains across the Marvel universe.' },
+  { t: 'The Incredible Hulk', y: 1996, kind: 'animated', format: 'Animated series', about: 'Bruce Banner struggles to control the Hulk while searching for a way to change back.' },
+  { t: 'Silver Surfer', y: 1998, kind: 'animated', format: 'Animated series', about: 'The cosmic hero searches the universe for his lost home and freedom from Galactus.' },
+  { t: 'Spider-Man Unlimited', y: 1999, kind: 'animated', format: 'Animated series', about: 'Spider-Man travels to Counter-Earth to rescue John Jameson and protect its inhabitants.' },
+  { t: 'X-Men: Evolution', y: 2000, kind: 'animated', format: 'Animated series', about: 'Teenage mutants learn to use their powers while facing school and global threats.' },
+  { t: 'Spider-Man: The New Animated Series', y: 2003, kind: 'animated', format: 'Animated series', about: 'A college-age Peter Parker balances life at Empire State University with hero work.' },
+  { t: 'Fantastic Four: World’s Greatest Heroes', y: 2006, kind: 'animated', format: 'Animated series', about: 'The Fantastic Four explore science, space and the dangers that come with their powers.' },
+  { t: 'Wolverine and the X-Men', y: 2009, kind: 'animated', format: 'Animated series', about: 'Wolverine searches for the missing X-Men and works to bring the team back together.' },
+  { t: 'Iron Man: Armored Adventures', y: 2009, kind: 'animated', format: 'Animated series', about: 'Teenage inventor Tony Stark builds armor and takes on threats with his friends.' },
+  { t: 'The Super Hero Squad Show', y: 2009, kind: 'animated', format: 'Animated series', about: 'Marvel heroes team up in playful adventures to recover the scattered Infinity Fractals.' },
+  { t: 'The Avengers: Earth’s Mightiest Heroes', y: 2010, kind: 'animated', format: 'Animated series', about: 'The Avengers assemble to respond to a breakout of supervillains and larger threats.' },
+  { t: 'The Amazing Spider-Man', y: 1977, kind: 'live', format: 'Live-action series', about: 'Peter Parker balances life as a photographer with his adventures as Spider-Man.' },
+  { t: 'The Incredible Hulk', y: 1977, kind: 'live', format: 'Live-action series', about: 'David Banner travels across America while searching for a cure for his transformation.' },
+  { t: 'Spider-Man (Japanese TV series)', y: 1978, kind: 'live', format: 'Live-action series', about: 'A Japanese motorcyclist gains spider powers and a giant robot to fight the Iron Cross Army.' },
+  { t: 'Mutant X', y: 2001, kind: 'live', format: 'Live-action series', about: 'A team of people with extraordinary abilities protects others while uncovering the source of their powers.' },
+  { t: 'Blade: The Series', y: 2006, kind: 'live', format: 'Live-action series', about: 'Vampire hunter Blade continues his fight against a powerful vampire organization.' },
+  { t: 'Marvel Anime: Iron Man', y: 2010, kind: 'animated', format: 'Anime series', about: 'Tony Stark travels to Japan and faces a new threat connected to his armor.' },
+  { t: 'Marvel Anime: Wolverine', y: 2011, kind: 'animated', format: 'Anime series', about: 'Logan journeys to Japan to rescue Mariko and confront the Yakuza.' },
+  { t: 'Marvel Anime: X-Men', y: 2011, kind: 'animated', format: 'Anime series', about: 'The X-Men reunite after a tragedy to investigate mutant disappearances in Japan.' },
+  { t: 'Marvel Anime: Blade', y: 2011, kind: 'animated', format: 'Anime series', about: 'Blade hunts vampires across Asia and tracks the vampire Deacon Frost.' },
+  { t: 'Marvel\'s Agents of S.H.I.E.L.D.', y: 2013, kind: 'live', format: 'Live-action series', about: 'Agent Coulson leads a team investigating unusual threats and protecting the world.' },
+  { t: 'Marvel\'s Avengers Assemble', y: 2013, kind: 'animated', format: 'Animated series', about: 'Earth\'s mightiest heroes reunite to face new threats after the Avengers disband.' },
+  { t: 'Hulk and the Agents of S.M.A.S.H.', y: 2013, kind: 'animated', format: 'Animated series', about: 'Hulk leads a team of gamma-powered heroes on adventures captured for a web channel.' },
+  { t: 'Marvel Disk Wars: The Avengers', y: 2014, kind: 'animated', format: 'Anime series', about: 'Young heroes help the Avengers after villains trap superheroes inside digital discs.' },
+  { t: 'Marvel\'s Agent Carter', y: 2015, kind: 'live', format: 'Live-action series', about: 'Peggy Carter takes on covert missions while building a new life after World War II.' },
+  { t: 'Marvel\'s Daredevil', y: 2015, kind: 'live', format: 'Live-action series', about: 'Blind lawyer Matt Murdock fights for justice in court and as a masked hero in Hell\'s Kitchen.' },
+  { t: 'Marvel\'s Jessica Jones', y: 2015, kind: 'live', format: 'Live-action series', about: 'Private investigator Jessica Jones confronts trauma, dangerous cases and people with powers.' },
+  { t: 'Guardians of the Galaxy', y: 2015, kind: 'animated', format: 'Animated series', about: 'The cosmic team travels the galaxy to protect powerful artifacts and face galactic villains.' },
+  { t: 'Marvel\'s Luke Cage', y: 2016, kind: 'live', format: 'Live-action series', about: 'An unbreakable Harlem hero takes a stand against crime threatening his neighborhood.' },
+  { t: 'Marvel\'s Legion', y: 2017, kind: 'live', format: 'Live-action series', about: 'David Haller questions what is real as he discovers the extraordinary nature of his mind.' },
+  { t: 'Marvel\'s Iron Fist', y: 2017, kind: 'live', format: 'Live-action series', about: 'Danny Rand returns to New York with martial-arts mastery and the power of the Iron Fist.' },
+  { t: 'Marvel\'s The Defenders', y: 2017, kind: 'live', format: 'Live-action miniseries', about: 'Daredevil, Jessica Jones, Luke Cage and Iron Fist join forces to defend New York.' },
+  { t: 'The Gifted', y: 2017, kind: 'live', format: 'Live-action series', about: 'A family goes on the run and joins a community of mutants living under threat.' },
+  { t: 'Marvel\'s The Punisher', y: 2017, kind: 'live', format: 'Live-action series', about: 'Frank Castle uncovers a conspiracy while pursuing his own harsh version of justice.' },
+  { t: 'Marvel\'s Inhumans', y: 2017, kind: 'live', format: 'Live-action series', about: 'The Inhuman royal family escapes to Earth after a coup on the moon.' },
+  { t: 'Marvel\'s Spider-Man', y: 2017, kind: 'animated', format: 'Animated series', about: 'Teenager Peter Parker learns to balance school, friendships and becoming a hero.' },
+  { t: 'Big Hero 6: The Series', y: 2017, kind: 'animated', format: 'Animated series', about: 'Hiro, Baymax and their friends protect San Fransokyo while taking on new challenges.' },
+  { t: 'Marvel Future Avengers', y: 2017, kind: 'animated', format: 'Anime series', about: 'Three children trained by Hydra discover the truth and learn to become heroes with the Avengers.' },
+  { t: 'Marvel Super Hero Adventures', y: 2017, kind: 'web', format: 'Animated web shorts', about: 'Short, kid-friendly adventures pair Spider-Man with other Marvel heroes.' },
+  { t: 'Marvel\'s Runaways', y: 2017, kind: 'live', format: 'Live-action series', about: 'Six teenagers discover their parents are part of a secret criminal organization.' },
+  { t: 'Marvel\'s Cloak & Dagger', y: 2018, kind: 'live', format: 'Live-action series', about: 'Two teenagers with connected powers uncover a conspiracy in New Orleans.' },
+  { t: 'Marvel Rising: Initiation', y: 2018, kind: 'web', format: 'Animated web miniseries', about: 'A short-form adventure introduces Ghost-Spider and the young heroes of Marvel Rising.' },
+  { t: 'Marvel Becoming', y: 2018, kind: 'web', format: 'Behind-the-scenes web series', about: 'Cosplayers and artists transform into Marvel characters and share how they made their looks.' },
+  { t: 'Marvel\'s Hero Project', y: 2019, kind: 'web', format: 'Documentary series', about: 'Young people making a difference in their communities are celebrated as real-life heroes.' },
+  { t: 'Marvel\'s Helstrom', y: 2020, kind: 'live', format: 'Live-action series', about: 'The children of a mysterious serial killer investigate supernatural threats.' },
+  { t: 'Marvel\'s 616', y: 2020, kind: 'web', format: 'Documentary series', about: 'Documentary filmmakers explore Marvel stories, creators, fans and culture around the world.' },
+  { t: 'Marvel\'s Storyboards', y: 2020, kind: 'web', format: 'Interview web series', about: 'Joe Quesada talks with artists and creators about the stories behind their work.' },
+  { t: 'WandaVision', y: 2021, kind: 'live', format: 'Live-action series', about: 'Wanda Maximoff and Vision live through changing sitcom worlds with a mystery beneath the surface.' },
+  { t: 'The Falcon and the Winter Soldier', y: 2021, kind: 'live', format: 'Live-action series', about: 'Sam Wilson and Bucky Barnes team up as the world adjusts to a new Captain America.' },
+  { t: 'Loki', y: 2021, kind: 'live', format: 'Live-action series', about: 'A variant Loki is pulled into the Time Variance Authority and a journey through time.' },
+  { t: 'Marvel Studios: Legends', y: 2021, kind: 'web', format: 'Recap web series', about: 'Short recaps revisit the characters and stories connected to Marvel Studios releases.' },
+  { t: 'Marvel Studios: Assembled', y: 2021, kind: 'web', format: 'Documentary series', about: 'Behind-the-scenes specials show how Marvel Studios films and series are made.' },
+  { t: 'M.O.D.O.K.', y: 2021, kind: 'animated', format: 'Animated series', about: 'The ambitious supervillain M.O.D.O.K. struggles to manage his organization and family.' },
+  { t: 'Hit-Monkey', y: 2021, kind: 'animated', format: 'Animated series', about: 'A Japanese macaque and the ghost of an assassin pursue vengeance through Tokyo.' },
+  { t: 'What If...?', y: 2021, kind: 'animated', format: 'Animated series', about: 'The Watcher explores alternate realities that reshape familiar Marvel stories.' },
+  { t: 'Spidey and His Amazing Friends', y: 2021, kind: 'animated', format: 'Animated series', about: 'Young Peter Parker, Gwen Stacy and Miles Morales team up for kid-friendly adventures.' },
+  { t: 'Hawkeye', y: 2021, kind: 'live', format: 'Live-action series', about: 'Clint Barton teams up with archer Kate Bishop during a holiday trip to New York.' },
+  { t: 'Moon Knight', y: 2022, kind: 'live', format: 'Live-action series', about: 'Steven Grant discovers an Egyptian god, a mercenary identity and a dangerous mystery.' },
+  { t: 'Ms. Marvel', y: 2022, kind: 'live', format: 'Live-action series', about: 'Jersey City teenager Kamala Khan discovers her powers and steps into the world of heroes.' },
+  { t: 'I Am Groot', y: 2022, kind: 'animated', format: 'Animated short series', about: 'Baby Groot gets into playful trouble on adventures across the galaxy.' },
+  { t: 'She-Hulk: Attorney at Law', y: 2022, kind: 'live', format: 'Live-action series', about: 'Jennifer Walters balances superhero life with her work as a lawyer.' },
+  { t: 'Moon Girl and Devil Dinosaur', y: 2023, kind: 'animated', format: 'Animated series', about: 'Genius Lunella Lafayette and a red dinosaur protect their New York neighborhood.' },
+  { t: 'Secret Invasion', y: 2023, kind: 'live', format: 'Live-action series', about: 'Nick Fury uncovers a hidden Skrull infiltration and tries to stop a threat on Earth.' },
+  { t: 'X-Men \'97', y: 2024, kind: 'animated', format: 'Animated series', about: 'The X-Men return to face a world changed by the loss of Professor X.' },
+  { t: 'Echo', y: 2024, kind: 'live', format: 'Live-action series', about: 'Maya Lopez returns home and confronts her past, family and place in her community.' },
+  { t: 'Agatha All Along', y: 2024, kind: 'live', format: 'Live-action series', about: 'Agatha Harkness sets out on the Witches’ Road with a new coven.' },
+  { t: 'Your Friendly Neighborhood Spider-Man', y: 2025, kind: 'animated', format: 'Animated series', about: 'An alternate Peter Parker finds his footing as a young hero in New York.' },
+  { t: 'Daredevil: Born Again', y: 2025, kind: 'live', format: 'Live-action series', about: 'Matt Murdock and Wilson Fisk pursue different futures as their paths collide again.' },
+  { t: 'Eyes of Wakanda', y: 2025, kind: 'animated', format: 'Animated anthology series', about: 'Wakandan warriors travel across history to recover dangerous vibranium artifacts.' },
+  { t: 'Ironheart', y: 2025, kind: 'live', format: 'Live-action series', about: 'Inventor Riri Williams returns to Chicago and crosses paths with a powerful form of magic.' },
+  { t: 'Marvel Zombies', y: 2025, kind: 'animated', format: 'Animated miniseries', about: 'A new generation of heroes fights to survive in a world overrun by zombies.' },
+  { t: 'Wonder Man', y: 2026, kind: 'live', format: 'Live-action series', about: 'Actor Simon Williams pursues a role that could change his life in Hollywood.' },
+  { t: 'WHIH Newsfront', y: 2015, kind: 'web', format: 'Live-action news web series', about: 'A fictional news program reports on events and characters from the Marvel Cinematic Universe.' },
+  { t: 'Team Thor', y: 2016, kind: 'web', format: 'Live-action comedy shorts', about: 'Mockumentary shorts show what Thor was doing while the Avengers were away.' },
+  { t: 'Agents of S.H.I.E.L.D.: Slingshot', y: 2016, kind: 'web', format: 'Live-action web miniseries', about: 'Elena “Yo-Yo” Rodriguez takes on a secret mission between seasons of Agents of S.H.I.E.L.D.' },
+  { t: 'The Daily Bugle', y: 2019, kind: 'web', format: 'Live-action news web series', about: 'J. Jonah Jameson shares sensational reports about Spider-Man and events in New York.' },
+  { t: 'Marvel\'s Voices Rising: The Music of Wakanda Forever', y: 2023, kind: 'web', format: 'Documentary miniseries', about: 'A behind-the-scenes look at the music and artists behind Black Panther: Wakanda Forever.' },
+  { t: 'LEGO Marvel Super Heroes: Maximum Overload', y: 2013, kind: 'web', format: 'Animated web miniseries', about: 'Spider-Man and the Avengers face a series of villains in a LEGO Marvel adventure.' },
+  { t: 'LEGO Marvel Super Heroes: Avengers Reassembled', y: 2015, kind: 'web', format: 'Animated web miniseries', about: 'The Avengers try to stop Ultron from taking over their tower and their minds.' },
+  { t: 'Marvel Battleworld', y: 2024, kind: 'web', format: 'Animated web series', about: 'Marvel heroes face miniature adventures across the strange patchwork world of Battleworld.' }
+];
 
 /* ============ Movies UI ============ */
 const state = { phase: 'all', q: '', sort: 'release' };
@@ -1521,13 +1981,20 @@ $('#sort').addEventListener('change', e => { state.sort = e.target.value; render
 
 function cardHTML(m) {
   const ph = PHASES[m.p];
+  const posterColor = MOVIE_COMIC_COLORS[m.t] || ph.c;
+  const redPalette = /^#([0-9a-f]{6})$/i.test(posterColor)
+    && parseInt(posterColor.slice(1, 3), 16) > 180
+    && parseInt(posterColor.slice(3, 5), 16) < 100
+    && parseInt(posterColor.slice(5, 7), 16) < 110;
   const isSeen = seen.has(m.n);
   return `<li><article class="card" style="--c:${ph.c}">
-    <div class="cover">
+    <button type="button" class="cover${redPalette ? ' is-red-palette' : ''}" style="--poster-color:${posterColor}" data-open="${m.n}" data-movie-poster="${m.n}" aria-label="View poster and details for ${esc(m.t)}">
+      <img class="cover-poster" loading="lazy" alt="">
       <div class="tags"><span class="tag" title="Release order">No. ${m.n}</span><span class="tag">Phase ${m.p}</span></div>
       <span class="year">${m.y}</span>
       ${m.up ? '<span class="soon">Coming soon</span>' : ''}
-    </div>
+      <span class="cover-hint" aria-hidden="true">View poster</span>
+    </button>
     <div class="body">
       <h3>${esc(m.t)}</h3>
       <p class="by">Directed by ${esc(m.dir)}</p>
@@ -1563,6 +2030,10 @@ function renderMovies() {
     : `<li class="empty"><h3>No movies found</h3><p>Nothing matches that search in this phase. Clear the filters to see every movie again.</p><button type="button" class="btn small" id="clearFilters">Clear filters</button></li>`;
 
   $('#count').textContent = `Showing ${list.length} of ${MOVIES.length} movies`;
+  $$('[data-movie-poster]', $('#grid')).forEach(cover => {
+    if (posterObserver) posterObserver.observe(cover);
+    else loadCardPoster(cover);
+  });
 
   if (state.phase === 'all') {
     $('#phaseNote').innerHTML = `<strong>All six phases.</strong> Phases 1 to 3 make up the Infinity Saga. Phases 4 to 6 make up the Multiverse Saga.`;
@@ -1605,11 +2076,20 @@ function syncDialogSeen(m) {
 }
 function openMovie(n) {
   const m = MOVIES[n - 1], ph = PHASES[m.p];
+  const posterRequest = ++posterDialogRequest;
   dlg.dataset.n = n;
   dlg.style.setProperty('--c', ph.c);
   $('#dTags').innerHTML = `<span class="tag">No. ${m.n}</span><span class="tag">Phase ${m.p}</span>${m.up ? '<span class="tag">Coming soon</span>' : ''}`;
   $('#dTitle').textContent = m.t;
   $('#dAbout').textContent = m.about;
+  const posterImage = $('#dPoster');
+  posterImage.hidden = true;
+  posterImage.onload = null;
+  posterImage.onerror = null;
+  posterImage.removeAttribute('src');
+  $('#dPosterCredit').hidden = true;
+  $('#dPosterStatus').hidden = false;
+  $('#dPosterStatus').textContent = 'Loading movie poster…';
   $('#dFacts').innerHTML =
     `<div class="fact"><dt>${m.up ? 'Planned release' : 'Released'}</dt><dd>${fmtDate(m.d)}</dd></div>` +
     `<div class="fact"><dt>Director</dt><dd>${esc(m.dir)}</dd></div>` +
@@ -1618,6 +2098,30 @@ function openMovie(n) {
   syncDialogSeen(m);
   dlg.showModal();
   dlg.scrollTop = 0;
+  const poster = getMoviePoster(m);
+  if (!poster) {
+    $('#dPosterStatus').textContent = 'No poster is available for this movie yet.';
+    return;
+  }
+  if (posterRequest === posterDialogRequest && dlg.open) {
+    posterImage.alt = `${m.t} theatrical poster`;
+    posterImage.onload = () => {
+      if (posterRequest === posterDialogRequest) {
+        posterImage.hidden = false;
+        $('#dPosterStatus').hidden = true;
+      }
+    };
+    posterImage.onerror = () => {
+      if (posterRequest === posterDialogRequest) {
+        posterImage.hidden = true;
+        $('#dPosterStatus').hidden = false;
+        $('#dPosterStatus').textContent = 'The poster image could not be loaded.';
+      }
+    };
+    $('#dPosterSource').href = poster.source;
+    $('#dPosterCredit').hidden = false;
+    posterImage.src = poster.image;
+  }
 }
 $('#dClose').addEventListener('click', () => dlg.close());
 $('#dDone').addEventListener('click', () => dlg.close());
@@ -1634,6 +2138,65 @@ dlg.addEventListener('close', () => {
 });
 
 renderMovies();
+
+/* ============ Marvel series UI ============ */
+const seriesFilters = $('#seriesFilters');
+const seriesGroups = $$('[data-series-group]');
+let activeSeriesFilter = 'all';
+
+function renderSeries(openMatches = false) {
+  const query = $('#seriesSearch').value.trim().toLowerCase();
+  const matches = MARVEL_SERIES.filter(series =>
+    (!query || `${series.t} ${series.y} ${series.format} ${series.about}`.toLowerCase().includes(query))
+  );
+  const visibleCount = activeSeriesFilter === 'all'
+    ? matches.length
+    : matches.filter(series => series.kind === activeSeriesFilter).length;
+
+  $('#seriesCount').textContent = `Matching ${visibleCount} of ${MARVEL_SERIES.length} series`;
+  seriesGroups.forEach(group => {
+    const kind = group.dataset.seriesGroup;
+    const list = matches
+      .filter(series => series.kind === kind)
+      .sort((a, b) => a.y - b.y || a.t.localeCompare(b.t));
+    if (openMatches) group.open = query.length > 0 && list.length > 0 && (activeSeriesFilter === 'all' || activeSeriesFilter === kind);
+    group.hidden = (activeSeriesFilter !== 'all' && activeSeriesFilter !== kind) || list.length === 0;
+    const color = kind === 'live' ? '#E8262D' : kind === 'animated' ? '#1F5BFF' : '#7A3FE0';
+    const label = kind === 'live' ? 'Live action' : kind === 'animated' ? 'Animation' : 'Web series';
+    $(`ul`, group).innerHTML = group.open ? list.map(series => `<li><article class="card series-card" style="--series-color:${color}">
+      <div class="series-cover"><span class="series-kind">${label}</span><span class="series-year">${series.y}</span></div>
+      <div class="body">
+        <h3>${esc(series.t)}</h3>
+        <p class="series-format">${esc(series.format)}</p>
+        <p class="series-summary">${esc(series.about)}</p>
+      </div>
+    </article></li>`).join('') : '';
+  });
+  $('#seriesEmpty').hidden = visibleCount > 0;
+}
+
+seriesFilters.addEventListener('click', event => {
+  const button = event.target.closest('[data-series-filter]');
+  if (!button) return;
+  activeSeriesFilter = button.dataset.seriesFilter;
+  $$('.series-filter', seriesFilters).forEach(filter => filter.setAttribute('aria-pressed', String(filter === button)));
+  seriesGroups.forEach(group => { group.open = activeSeriesFilter !== 'all' && group.dataset.seriesGroup === activeSeriesFilter; });
+  renderSeries(activeSeriesFilter === 'all' && $('#seriesSearch').value.trim().length > 0);
+});
+$('#seriesSearch').addEventListener('input', () => {
+  const hasQuery = $('#seriesSearch').value.trim().length > 0;
+  if (!hasQuery) seriesGroups.forEach(group => { group.open = false; });
+  renderSeries(hasQuery);
+});
+seriesGroups.forEach(group => group.addEventListener('toggle', () => renderSeries()));
+$('#clearSeriesFilters').addEventListener('click', () => {
+  activeSeriesFilter = 'all';
+  $('#seriesSearch').value = '';
+  $$('.series-filter', seriesFilters).forEach(filter => filter.setAttribute('aria-pressed', String(filter.dataset.seriesFilter === 'all')));
+  seriesGroups.forEach(group => { group.open = false; });
+  renderSeries();
+});
+renderSeries();
 
 const musicToggle = document.getElementById('musicToggle');
 const musicStatus = document.getElementById('musicStatus');

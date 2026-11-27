@@ -1,4 +1,22 @@
-# marvel-web is all about to make people enjoy and know more abut marvel movies
+# MarvelVault
+
+An unofficial fan guide to Marvel movies, television series and web shows.
+
+## Marvel series
+
+The series guide is searchable and filterable by live action, animation, and
+web/documentary productions. It presents entries in release-year order.
+
+The hero displays a live countdown to the listed U.S. release date for
+*Avengers: Doomsday*.
+
+## Movie posters
+
+Movie covers load poster thumbnails on demand from Wikipedia and link to the
+Wikipedia source article in each movie's details. Poster links are configured
+directly in the page, so no Wikipedia search is needed while browsing. An
+internet connection is required; posters that are unavailable keep the
+existing color cover.
 
 ## Community polls
 
